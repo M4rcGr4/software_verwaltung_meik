@@ -68,7 +68,7 @@
 										<h2>Menü</h2>
 									</header>
 									<ul>
-										<li><a href="index.html">Home</a></li>
+										<li><a href="index.php">Home</a></li>
 										<!--<li><a href="generic.html">Generic</a></li>
 										<li><a href="elements.html">Elements</a></li>-->
 										<li>
@@ -81,11 +81,11 @@
 										<li>
 											<span class="opener">Kategorien</span>
 											<ul>
-												<li><a href="#">Kategorien anlegen</a></li>
+												<li><a href="./kategorien.php">Kategorien anlegen</a></li>
 												<li><a href="#">Kategorien verwalten</a></li>
 											</ul>
 										</li>
-										<li><a href="#">Service</a></li>
+										<li><a href="./service.php">Service</a></li>
 										<!--<li>
 											<span class="opener">Another Submenu</span>
 											<ul>

@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Exponate</title>
+		<title>Kategorien</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -30,7 +30,7 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1>Exponate</h1>
+										<h1>Kategorien</h1>
 									</header>
 
 
