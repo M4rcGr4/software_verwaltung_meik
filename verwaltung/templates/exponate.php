@@ -1,9 +1,5 @@
 <!DOCTYPE HTML>
-<!--
-	Editorial by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+
 <html>
 	<head>
 		<title>Exponate</title>
@@ -19,15 +15,6 @@
 				<!-- Main -->
 					<div id="main">
 						<div class="inner">
-
-							<!-- Header -->
-							<header id="header">
-								<a href="index.html" class="logo"><strong>MEIK</strong> Museum zur
-									Entwicklung der Informations- und
-									Kommunikationstechnik</a>
-							</header>
-
-							<!-- Content -->
 								<section>
 									<header class="main">
 										<h1>Exponate</h1>
@@ -133,58 +120,6 @@
 
 						</div>
 					</div>
-
-				<!-- Sidebar -->
-					<div id="sidebar">
-						<div class="inner">
-							<!-- Menu -->
-                            <nav id="menu">
-                                <header class="major">
-                                    <h2>Menü</h2>
-                                </header>
-                                <ul>
-                                    <li><a href="index.php">Home</a></li>
-                                    <!--<li><a href="generic.html">Generic</a></li>
-                                    <li><a href="elements.html">Elements</a></li>-->
-                                    <li>
-                                        <span class="opener">Exponate</span>
-                                        <ul>
-                                            <li><a href="./exponate.php">Exponate anlegen</a></li>
-                                            <li><a href="#">Exponate verwalten</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <span class="opener">Kategorien</span>
-                                        <ul>
-                                            <li><a href="./kategorien.php">Kategorien anlegen</a></li>
-                                            <li><a href="#">Kategorien verwalten</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="./service.php">Service</a></li>
-                                    <!--<li>
-                                        <span class="opener">Another Submenu</span>
-                                        <ul>
-                                            <li><a href="#">Lorem Dolor</a></li>
-                                            <li><a href="#">Ipsum Adipiscing</a></li>
-                                            <li><a href="#">Tempus Magna</a></li>
-                                            <li><a href="#">Feugiat Veroeros</a></li>
-                                        </ul>
-                                    </li>-->
-                                    <li><a href="#">BarCode-Scanner</a></li>
-                                    <li><a href="#">QR-Code Scanner</a></li>
-                                    <li>
-                                        <span class="opener">Adminbereich</span>
-                                        <ul>
-                                            <li><a href="./benutzerverwaltung.php">Benutzerverwaltung</a></li>
-                                            <li><a href="./auditlog.php">Audit Log</a></li>
-                                            <li><a href="./gelObj.php">gelöschte Exponate</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </nav>
-						</div>
-					</div>
-
 			</div>
 
 		<!-- Scripts -->

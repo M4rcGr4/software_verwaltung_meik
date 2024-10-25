@@ -8,6 +8,10 @@ function routing(input) {
         // dann wird die eigentliche Route auf die sessionRoute gesetzt
         sessionStorage.setItem("sessionRoute", input);
         route = sessionStorage.getItem("sessionRoute");
+        // wenn der Bildschirm kleiner ist als 751px wird automatisch die Seitenleiste eingeklappt
+        if (window.innerWidth < 751) { // Prüft, ob die Bildschirmbreite kleiner als 600px ist
+            toggleSidebar();
+        }
     }
     else{
         // es wird überprüft ob bereits eine Route gespeichert ist
@@ -16,7 +20,7 @@ function routing(input) {
         // wenn schon eine Route gespeichert ist wird die sessionRoute nicht verändert
         // dann wird die Route auf sessionRoute gesetzt
         if(sessionStorage.getItem("sessionRoute") == null){
-            sessionStorage.setItem("sessionRoute", 'main');
+            sessionStorage.setItem("sessionRoute", 'dashboard');
         }
         route = sessionStorage.getItem("sessionRoute");
     }
@@ -29,14 +33,14 @@ function routing(input) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            document.getElementById("banner").innerHTML = xhr.responseText;
+            document.getElementById("anchor").innerHTML = xhr.responseText;
         }
     };
 
     xhr.send();
 
     // wenn die Route todo ist, werden die Funktion aufgerufen, welche die gespeicherten Datensätze aus der Datenbank ließt
-    /*if(route == "todo"){
+    if(route == "todo"){
         get_values();
 
         setTimeout(function() {
@@ -51,7 +55,7 @@ function routing(input) {
                 }
             });
         }, 500);
-    }*/
+    }
 }
 // diese Datei wird bei jedem laden / neuladen der Seite geladen
 // dabei wird einmalig die Routing Funktion ausgeführt

@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Service</title>
+		<title>Audit Log</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -30,7 +30,7 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1>Service</h1>
+										<h1>Audit Log</h1>
 									</header>
 
 
