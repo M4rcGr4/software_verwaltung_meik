@@ -6,14 +6,15 @@ function decodeHTMLEntitiesUsingDOMParser(str) {
     return dom.body.textContent;
 }
 
-function get_values(){
+function get_values_exp(){
     // die gespeicherten Werte werden aus der Datenbank geladen, in dem der PHP Controller aufgerufen wird
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '../../inc/controller.php?values=all', true);
+    xhr.open('GET', '../verwaltung/inc/controller.php?get_exponate=true', true);
     xhr.onload = function() {
         if (xhr.status === 200) {
-            var jsonResponse = JSON.parse(xhr.responseText);
-            displayTodos(jsonResponse);
+            //var jsonResponse = JSON.parse(xhr.responseText);
+            //displayTodos(jsonResponse);
+            console.log(xhr.responseText);
         }
     };
     xhr.send();
