@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Exponate</title>
+		<title>Kategorien</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -30,7 +30,7 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1>Exponate</h1>
+										<h1>Kategorien</h1>
 									</header>
 
 
@@ -46,43 +46,31 @@
 																<input type="text" name="demo-name" id="demo-name" value="" placeholder="Exp. Nummer" />
 															</div>
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Titel" />
+																<input type="email" name="demo-email" id="demo-email" value="" placeholder="Titel" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Baujahr" />
+																<input type="email" name="demo-email" id="demo-email" value="" placeholder="Baujahr" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Hersteller" />
-															</div>
-															<div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Org. Preis" />
-															</div>
-															<div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Wert" />
-															</div>
-															<div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Herkunft" />
+																<input type="email" name="demo-email" id="demo-email" value="" placeholder="Hersteller" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Maße" />
+																<input type="email" name="demo-email" id="demo-email" value="" placeholder="Herkunft" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Material" />
+																<input type="email" name="demo-email" id="demo-email" value="" placeholder="Wert" />
+															</div>
+                                                            <div class="col-6 col-12-xsmall">
+																<input type="email" name="demo-email" id="demo-email" value="" placeholder="Maße" />
+															</div>
+                                                            <div class="col-6 col-12-xsmall">
+																<input type="email" name="demo-email" id="demo-email" value="" placeholder="Material" />
 															</div>
                                                             <div class="col-6 col-12-small">
 																<input type="checkbox" id="demo-human" name="demo-human" checked>
 																<label for="demo-human">öffentlich zugänglich</label>
 															</div>
 															<!-- Break -->
-															<div class="col-12">
-																<select name="demo-category" id="demo-category">
-																	<option value="">- Zustand -</option>
-																	<option value="1">kaputt</option>
-																	<option value="1">ok</option>
-																	<option value="1">restauriert</option>
-																	<option value="1">top</option>
-																</select>
-															</div>
 															<div class="col-12">
 																<select name="demo-category" id="demo-category">
 																	<option value="">- Kategorie -</option>
