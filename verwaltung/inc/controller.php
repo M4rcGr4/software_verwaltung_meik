@@ -24,6 +24,10 @@ function connect(){
 
 /* Funktionen für die Benutzerverwaltung */
 
+    /*
+        nutzer_id - wird fortlaufend vergeben
+    */
+
     function create_user(){
 
     }
@@ -40,8 +44,15 @@ function connect(){
         // eine Übersicht aller Nutzer ausgeben
     }
 
-    function show_user(){
+    function show_user($nutzer_id){
         // mit ID einen einzelnen Nutzer ausgeben
+        $pdo = connect();
+        $stmt = $pdo->prepare('SELECT `Anmeldung`, `Recht`, `Anzeigename`  FROM `Nutzer` WHERE NUTZER_ID='$nutzer_id);
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        json_encode($values);
+        return $values;
     }
 /*Ende Funktionen Benutzerverwaltung */
 
@@ -121,11 +132,17 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponat']))){
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponate']))){
-    get_exponate();
+    var_dump(get_exponate());
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_exponat']))){
     add_exponat($_GET['exp_nr'],$_GET['title'],$_GET['description'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
+         $_GET['dimensions'],$_GET['material'],$_GET['access'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
+    );
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_exponat']))){
+    edit_exponat($_GET['exponat_id'],$_GET['exp_nr'],$_GET['title'],$_GET['description'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
          $_GET['dimensions'],$_GET['material'],$_GET['access'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
     );
 }
