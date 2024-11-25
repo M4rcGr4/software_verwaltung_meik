@@ -107,7 +107,7 @@ function connect(){
         $accessibility, $events, $visitor_interests, $kat_id, $zu_id, $location_id){
         /* Diese Funktion verändert ein Exponat*/
         $pdo = connect();
-            $stmt = $pdo->prepare("UPDATE Exponat SET `Exp-Nr`='$number', `Titel`='$title', `Beschreibung`='$description', `Hersteller`='$producer', `Baujahr`=$production_year,
+        $stmt = $pdo->prepare("UPDATE Exponat SET `Exp-Nr`='$number', `Titel`='$title', `Beschreibung`='$description', `Hersteller`='$producer', `Baujahr`=$production_year,
             `Wert`=$price_today, `OrigPreis`='$price_original', `Herkunft`='$origin', `Abmessungen`='$dimensions', `Material`='$material', `Zugang`=$accessibility, `Ausstellung`='$events',
             `Interesse`='$visitor_interests', `Kat_ID`=$kat_id, `Zu_ID`=$zu_id, `Standort_ID`=$location_id WHERE Objekt_ID=$exponat_id");
         $stmt->execute(); 
@@ -116,13 +116,21 @@ function connect(){
 /*Ende Funktionen für Exponate */
 
 /*Entgegennehmen der Daten aus js und Weitergabe an Funktionen*/
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_exponat']))){
-    // add_exponat($_GET['exp_nr'],$_GET['title'],$_GET['description'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
-    //     $_GET['dimensions'],$_GET['material'],$_GET['access'],$_GET['events']
-    // )
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponat']))){
+    get_exponat($_GET['exponat_id']);
 }
 
-$test = edit_exponat(3,'1.003','Testfunktion','ausführliche Beschreibung des Exponates','hersteller',2,2,'1 Moark','herkunft','abmessung','material',1,'veranstaltung','besucherinteresse',0,0,0);
-var_dump($test);
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponate']))){
+    get_exponate();
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_exponat']))){
+    add_exponat($_GET['exp_nr'],$_GET['title'],$_GET['description'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
+         $_GET['dimensions'],$_GET['material'],$_GET['access'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
+    );
+}
+
+// $test = edit_exponat(3,'1.003','Testfunktion','Lorem ipsum','hersteller',2,2,'1 Moark','herkunft','abmessung','material',1,'veranstaltung','besucherinteresse',0,0,0);
+// var_dump($test);
 
 ?>
