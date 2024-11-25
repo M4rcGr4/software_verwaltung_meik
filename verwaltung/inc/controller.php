@@ -133,6 +133,7 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponat']))){
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponate']))){
     var_dump(get_exponate());
+    var_dump(get_exponate());
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_exponat']))){
@@ -147,7 +148,18 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_exponat']))){
     );
 }
 
-// $test = edit_exponat(3,'1.003','Testfunktion','Lorem ipsum','hersteller',2,2,'1 Moark','herkunft','abmessung','material',1,'veranstaltung','besucherinteresse',0,0,0);
-// var_dump($test);
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_exponat']))){
+    edit_exponat($_GET['exponat_id'],$_GET['exp_nr'],$_GET['title'],$_GET['description'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
+         $_GET['dimensions'],$_GET['material'],$_GET['access'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
+    );
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_exponat']))){
+    edit_exponat($_GET['exponat_id'],$_GET['exp_nr'],$_GET['title'],$_GET['description'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
+         $_GET['dimensions'],$_GET['material'],$_GET['access'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
+    );
+}
+$test = edit_exponat(3,'1.003','Testfunktion','Lorem ipsum','hersteller',2,2,'1 Moark','herkunft','abmessung','material',1,'veranstaltung','besucherinteresse',0,0,0);
+var_dump($test);
 
 ?>
