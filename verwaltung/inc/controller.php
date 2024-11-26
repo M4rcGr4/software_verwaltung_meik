@@ -148,6 +148,26 @@ function connect(){
 /*Ende Funktionen für Exponate */
 
 /*Entgegennehmen der Daten aus js und Weitergabe an Funktionen*/
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['create_user']))){
+    create_user($_GET['anmeldung'],$_GET['recht'],$_GET['passwort'],$_GET['anzeigename']);
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_user']))){
+    edit_user($_GET['nutzer_id'],$_GET['anmeldung'],$_GET['recht'],$_GET['passwort'],$_GET['anzeigename']);
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['delete_user']))){
+    delete_user($_GET['nutzer_id']);
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_users']))){
+    show_users();
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_user']))){
+    show_user($_GET['nutzer_id']);
+}
+
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponat']))){
     get_exponat($_GET['exponat_id']);
 }
