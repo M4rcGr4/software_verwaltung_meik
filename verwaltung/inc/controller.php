@@ -36,14 +36,14 @@ function connect(){
     function create_user($anmeldung,$recht,$passwort,$anzeigename){
         //Nutzer anlegen
         $pdo = connect();
-        $stmt = $pdo->prepare('INSERT INTO `Nutzer` (`Anmeldung`, `Recht`, `pw`, `Anzeigename`, `geloescht`) VALUES ('$anmeldung',$recht,'$passwort','$anzeigename',0) ');
+        $stmt = $pdo->prepare("INSERT INTO `Nutzer` (`Anmeldung`, `Recht`, `pw`, `Anzeigename`, `geloescht`) VALUES ('$anmeldung',$recht,'$passwort','$anzeigename',0)");
         $stmt->execute();     
     }
 
     function edit_user($nutzer_id,$anmeldung,$recht,$passwort,$anzeigename){
         //Nutzer bearbeiten
         $pdo = connect();
-        $stmt = $pdo->prepare('UPDATE `Nutzer` SET `Anmeldung`='$anmeldung', `Recht`=$recht, `pw`='$passwort', `Anzeigename`='$anzeigename' WHERE NUTZER_ID='.$nutzer_id);
+        $stmt = $pdo->prepare("UPDATE `Nutzer` SET `Anmeldung`='$anmeldung', `Recht`=$recht, `pw`='$passwort', `Anzeigename`='$anzeigename' WHERE NUTZER_ID=".$nutzer_id);
         $stmt->execute();        
     }
 
