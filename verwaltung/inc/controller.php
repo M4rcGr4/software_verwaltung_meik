@@ -26,22 +26,43 @@ function connect(){
 
     /*
         nutzer_id - wird fortlaufend vergeben
+        anmeldung - Anmeldename - Pflicht
+        Recht - Zugriffsberechtigung - Standardwert falls nichts
+        pw - Passwort - Pflicht
+        Anzeigename - Standardwert, Anmeldung falls nichts
+        geloescht - 1 wenn gelöscht
     */
 
-    function create_user(){
-
+    function create_user($anmeldung,$recht,$passwort,$anzeigename){
+        //Nutzer anlegen
+        $pdo = connect();
+        $stmt = $pdo->prepare('INSERT INTO `Nutzer` (`Anmeldung`, `Recht`, `pw`, `Anzeigename`, `geloescht`) VALUES ('$anmeldung',$recht,'$passwort','$anzeigename',0) ');
+        $stmt->execute();     
     }
 
-    function edit_user(){
-
+    function edit_user($nutzer_id,$anmeldung,$recht,$passwort,$anzeigename){
+        //Nutzer bearbeiten
+        $pdo = connect();
+        $stmt = $pdo->prepare('UPDATE `Nutzer` SET `Anmeldung`='$anmeldung', `Recht`=$recht, `pw`='$passwort', `Anzeigename`='$anzeigename' WHERE NUTZER_ID='.$nutzer_id);
+        $stmt->execute();        
     }
 
-    function delete_user(){
-
+    function delete_user($nutzer_id){
+        //Nutzer löschen
+        $pdo = connect();
+        $stmt = $pdo->prepare('UPDATE `Nutzer` SET geloescht=1 WHERE NUTZER_ID='.$nutzer_id);
+        $stmt->execute();        
     }
 
     function show_users(){
         // eine Übersicht aller Nutzer ausgeben
+        $pdo = connect();
+        $stmt = $pdo->prepare('SELECT `Anmeldung`, `Recht`, `Anzeigename`  FROM `Nutzer`');
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        json_encode($values);
+        return $values;
     }
 
     function show_user($nutzer_id){
@@ -82,7 +103,7 @@ function connect(){
         /* diese Funktion gibt alle Exponate aus */
         $pdo = connect();
         $stmt = $pdo->prepare('SELECT `Objekt_ID`, `Exp-Nr`, `Titel`, `Beschreibung`, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
-            `Material`, `Zugang`, `Ausstellung`, `Interesse`, `Kat_ID`, `Zu_ID`, `Standort_ID` FROM `Exponat`');
+            `Material`, `Zugang`, `Ausstellung`, `Interesse`, `Kat_ID`, `Zu_ID`, `Standort_ID` FROM `Exponat` WHERE Zu_ID > 0');
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
