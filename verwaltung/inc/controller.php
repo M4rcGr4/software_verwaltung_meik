@@ -147,6 +147,44 @@ function connect(){
 
 /*Ende Funktionen für Exponate */
 
+/* Funktionen für Kategorien*/
+    function add_kategorie($kat_name, $kat_beschreibung){
+        //Kategorie anlegen
+        $pdo = connect();
+        $stmt = $pdo->prepare("INSERT INTO Kategorie (Bezeichnung,Beschreibung) VALUES ('$kat_name','$kat_beschreibung')");
+        $stmt->execute();
+    }
+
+    function edit_kategorie($kat_id,$kat_name, $kat_beschreibung){
+        //Kategorie bearbeiten
+        $pdo = connect();
+        $stmt = $pdo->prepare("UPDATE Kategorie SET Bezeichnung='$kat_name', Beschreibung='$kat_beschreibung' WHERE Kat_ID=$kat_id");
+        $stmt->execute();
+    }
+
+    function show_kategorie($kat_id, $kat_name, $kat_beschreibung){
+        //Kategorie zeigen
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT Bezeichnung, Beschreibung FROM Kategorie WHERE Kat_ID=$kat_id");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        json_encode($values);
+        return $values;
+    }
+
+    function show_kategorien($kat_name, $kat_beschreibung){
+        //Kategorie zeigen
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT Bezeichnung, Beschreibung FROM Kategorie");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        json_encode($values);
+        return $values;
+    }
+/* Ende Funktionen für Kategorien*/
+
 /*Entgegennehmen der Daten aus js und Weitergabe an Funktionen*/
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['create_user']))){
     create_user($_GET['anmeldung'],$_GET['recht'],$_GET['passwort'],$_GET['anzeigename']);
@@ -188,7 +226,7 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_exponat']))){
     );
 }
 
-// $test = edit_exponat(3,'1.003','Testfunktion','Lorem ipsum','hersteller',2,2,'1 Moark','herkunft','abmessung','material',1,'veranstaltung','besucherinteresse',0,0,0);
+// $test = edit_user(3,'Nutzer3',1,'abcd','Nutzer3');
 // var_dump($test);
 
 ?>
