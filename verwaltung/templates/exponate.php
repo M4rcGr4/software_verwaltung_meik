@@ -30,31 +30,31 @@
 													<form method="post" action="#">
 														<div class="row gtr-uniform">
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-name" id="demo-name" value="" placeholder="Exp. Nummer" />
+																<input type="text" name="demo-name" id="expName" value="" placeholder="Exp. Nummer" />
 															</div>
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Titel" />
+																<input type="text" name="demo-email" id="expTitel" value="" placeholder="Titel" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Baujahr" />
+																<input type="text" name="demo-email" id="expBaujahr" value="" placeholder="Baujahr" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Hersteller" />
+																<input type="text" name="demo-email" id="expHersteller" value="" placeholder="Hersteller" />
 															</div>
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Org. Preis" />
+																<input type="text" name="demo-email" id="expOrgPreis" value="" placeholder="Org. Preis" />
 															</div>
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Wert" />
+																<input type="text" name="demo-email" id="expWert" value="" placeholder="Wert" />
 															</div>
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Herkunft" />
+																<input type="text" name="demo-email" id="expHerkunft" value="" placeholder="Herkunft" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Maße" />
+																<input type="text" name="demo-email" id="expMaße" value="" placeholder="Maße" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="demo-email" id="demo-email" value="" placeholder="Material" />
+																<input type="text" name="demo-email" id="expMaterial" value="" placeholder="Material" />
 															</div>
                                                             <div class="col-6 col-12-small">
 																<input type="checkbox" id="demo-human" name="demo-human" checked>
@@ -62,27 +62,27 @@
 															</div>
 															<!-- Break -->
 															<div class="col-12">
-																<select name="demo-category" id="demo-category">
+																<select name="demo-category" id="expZust">
 																	<option value="">- Zustand -</option>
-																	<option value="1">kaputt</option>
+																	<option value="">kaputt</option>
 																	<option value="1">ok</option>
 																	<option value="1">restauriert</option>
 																	<option value="1">top</option>
 																</select>
 															</div>
 															<div class="col-12">
-																<select name="demo-category" id="demo-category">
+																<select name="demo-category" id="expKat">
 																	<option value="">- Kategorie -</option>
-																	<option value="1">Manufacturing</option>
+																	<option value="">Ohne Kategorie</option>
 																	<option value="1">Shipping</option>
 																	<option value="1">Administration</option>
 																	<option value="1">Human Resources</option>
 																</select>
 															</div>
                                                             <div class="col-12">
-																<select name="demo-category" id="demo-category">
+																<select name="demo-category" id="expStandort">
 																	<option value="">- Standort -</option>
-																	<option value="1">Manufacturing</option>
+																	<option value="">ohne Standort</option>
 																	<option value="1">Shipping</option>
 																	<option value="1">Administration</option>
 																	<option value="1">Human Resources</option>
@@ -90,24 +90,24 @@
 															</div>
 
                                                             <div class="col-12">
-																<textarea name="demo-message" id="demo-message" placeholder="Veranstaltungen" rows="6"></textarea>
+																<textarea name="demo-message" id="expVeranst" placeholder="Veranstaltungen" rows="6"></textarea>
 															</div>
                                                             <div class="col-12">
-																<textarea name="demo-message" id="demo-message" placeholder="Notizen für Besucher" rows="6"></textarea>
+																<textarea name="demo-message" id="expNote" placeholder="Notizen für Besucher" rows="6"></textarea>
 															</div>
 															<div class="col-12">
-																<textarea name="demo-message" id="demo-message" placeholder="ausführliche Beschreibung" rows="6"></textarea>
+																<textarea name="demo-message" id="expBesch" placeholder="ausführliche Beschreibung" rows="6"></textarea>
 															</div>
                                                             <div class="col-12">
-																<textarea name="demo-message" id="demo-message" placeholder="zug. Dokumente" rows="6"></textarea>
+																<textarea name="demo-message" id="expDoks" placeholder="zug. Dokumente" rows="6"></textarea>
 															</div>
                                                             <div class="col-12">
-																<textarea name="demo-message" id="demo-message" placeholder="zug. Exponate" rows="6"></textarea>
+																<textarea name="demo-message" id="expZugExp" placeholder="zug. Exponate" rows="6"></textarea>
 															</div>
 															
 															<div class="col-12">
 																<ul class="actions">
-																	<li><input type="submit" value="Speichern" class="primary" /></li>
+																	<li><input type="submit" value="Speichern" onclick="add_exp()" class="primary" /></li>
 																	<li><input type="reset" value="Zurücksetzen" onclick="get_values_exp()" /></li>
 																</ul>
 															</div>
