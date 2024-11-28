@@ -162,7 +162,7 @@ function connect(){
         $stmt->execute();
     }
 
-    function show_kategorie($kat_id, $kat_name, $kat_beschreibung){
+    function show_kategorie($kat_id){
         //Kategorie zeigen
         $pdo = connect();
         $stmt = $pdo->prepare("SELECT Bezeichnung, Beschreibung FROM Kategorie WHERE Kat_ID=$kat_id");
@@ -173,7 +173,7 @@ function connect(){
         return $values;
     }
 
-    function show_kategorien($kat_name, $kat_beschreibung){
+    function show_kategorien(){
         //Kategorie zeigen
         $pdo = connect();
         $stmt = $pdo->prepare("SELECT Bezeichnung, Beschreibung FROM Kategorie");
@@ -211,7 +211,7 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponat']))){
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponate']))){
-    var_dump(get_exponate());
+    get_exponate();
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_exponat']))){
@@ -226,6 +226,21 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_exponat']))){
     );
 }
 
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_kategorie']))){
+    add_kategorie($_GET['kat_name'],$_GET['kat_beschreibung']);
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_kategorie']))){
+    edit_kategorie($_GET['kat_id'],$_GET['kat_name'],$_GET['kat_beschreibung']);
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_kategorie']))){
+    show_kategorie($_GET['kat_id']);
+}
+
+if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_kategorien']))){
+    show_kategorien();
+}
 // $test = edit_user(3,'Nutzer3',1,'abcd','Nutzer3');
 // var_dump($test);
 
