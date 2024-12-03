@@ -78,6 +78,7 @@
 												<li><a onclick="routing('benutzerverwaltung')">Benutzerverwaltung</a></li>
 												<li><a onclick="routing('auditlog')">Audit Log</a></li>
 												<li><a onclick="routing('gelObj')">gelöschte Exponate</a></li>
+												<li><a onclick="routing('test')">Test</a></li>
 											</ul>
 										</li>
 									</ul>

@@ -124,23 +124,23 @@ function connect(){
 
     function add_exponat(
         $number, $title, $description, $producer, $production_year, $price_today, $price_original, $origin, $dimensions, $material, 
-        $accessibility, $events, $visitor_interests, $kat_id, $zu_id, $location_id){
+        $events, $visitor_interests, $kat_id, $zu_id, $location_id){
         /* diese Funktion legt eine neues Exponat an*/
         $pdo = connect();
         $stmt = $pdo->prepare("INSERT INTO Exponat (`Exp-Nr`, `Titel`, `Beschreibung`, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
-            `Material`, `Zugang`, `Ausstellung`, `Interesse`, `Kat_ID`, `Zu_ID`, `Standort_ID`) 
+            `Material`, `Ausstellung`, `Interesse`, `Kat_ID`, `Zu_ID`, `Standort_ID`) 
             values ('$number','$title','$description','$producer','$production_year','$price_today','$price_original','$origin','$dimensions',
-            '$material','$accessibility','$events','$visitor_interests',$kat_id,$zu_id,$location_id)");
+            '$material','$events','$visitor_interests',$kat_id,$zu_id,$location_id)");
         $stmt->execute();
     }
 
     function edit_exponat(
         $exponat_id, $number, $title, $description, $producer, $production_year, $price_today, $price_original, $origin, $dimensions, $material, 
-        $accessibility, $events, $visitor_interests, $kat_id, $zu_id, $location_id){
+        $events, $visitor_interests, $kat_id, $zu_id, $location_id){
         /* Diese Funktion verändert ein Exponat*/
         $pdo = connect();
         $stmt = $pdo->prepare("UPDATE Exponat SET `Exp-Nr`='$number', `Titel`='$title', `Beschreibung`='$description', `Hersteller`='$producer', `Baujahr`=$production_year,
-            `Wert`=$price_today, `OrigPreis`='$price_original', `Herkunft`='$origin', `Abmessungen`='$dimensions', `Material`='$material', `Zugang`=$accessibility, `Ausstellung`='$events',
+            `Wert`=$price_today, `OrigPreis`='$price_original', `Herkunft`='$origin', `Abmessungen`='$dimensions', `Material`='$material', `Ausstellung`='$events',
             `Interesse`='$visitor_interests', `Kat_ID`=$kat_id, `Zu_ID`=$zu_id, `Standort_ID`=$location_id WHERE Objekt_ID=$exponat_id");
         $stmt->execute(); 
     }
@@ -215,19 +215,29 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponate']))){
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_exponat']))){
-    add_exponat($_GET['exp_nr'],$_GET['title'],$_GET['description'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
-         $_GET['dimensions'],$_GET['material'],$_GET['access'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
+    if(empty($_GET['expBaujahr'])){$_GET['expBaujahr'] = 0;}
+    if(empty($_GET['expWert'])){$_GET['expWert'] = 0;}
+    if(empty($_GET['expOrgPreis'])){$_GET['expOrgPreis'] = 0;}
+    add_exponat($_GET['expName'],$_GET['expTitel'],$_GET['expBesch'],$_GET['expHersteller'],$_GET['expBaujahr'],$_GET['expWert'],$_GET['expOrgPreis'],$_GET['expHerkunft'],
+         $_GET['expMaße'],$_GET['expMaterial'],$_GET['expVeranst'],$_GET['expNote'],$_GET['expKat'],$_GET['expZust'],$_GET['expStandort']
     );
+
+    header("Location: ../index.php");
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_exponat']))){
-    edit_exponat($_GET['exponat_id'],$_GET['exp_nr'],$_GET['title'],$_GET['description'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
-         $_GET['dimensions'],$_GET['material'],$_GET['access'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
+    if(empty($_GET['expBaujahr'])){$_GET['expBaujahr'] = 0;}
+    if(empty($_GET['expWert'])){$_GET['expWert'] = 0;}
+    if(empty($_GET['expOrgPreis'])){$_GET['expOrgPreis'] = 0;}
+    edit_exponat($_GET['exponat_id'],$_GET['expName'],$_GET['expTitel'],$_GET['expBesch'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
+         $_GET['dimensions'],$_GET['material'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
     );
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_kategorie']))){
-    add_kategorie($_GET['kat_name'],$_GET['kat_beschreibung']);
+    add_kategorie($_GET['katName'],$_GET['katBeschreib']);
+
+    header("Location: ../index.php");
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_kategorie']))){
@@ -241,7 +251,5 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_kategorie']))){
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_kategorien']))){
     show_kategorien();
 }
-// $test = edit_user(3,'Nutzer3',1,'abcd','Nutzer3');
-// var_dump($test);
 
 ?>

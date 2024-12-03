@@ -20,24 +20,90 @@ function get_values_exp(){
     xhr.send();
 }
 
-function addTodo(){
-    var alertElement = document.querySelector('.alert');
-    var inputElement = document.getElementById('todoinput');
-    var inputValue = inputElement.value;
+function add_exp(){
+    //var alertElement = document.querySelector('.alert');
+    //Eingabeelemente mit entsprechenden ID's
+    var inputExpName = document.getElementById('expName');
+    var inputExpTitel = document.getElementById('expTitel');
+    var inputExpBaujahr = document.getElementById('expBaujahr');
+    var inputExpHersteller = document.getElementById('expHersteller');
+    var inputExpOrgPreis = document.getElementById('expOrgPreis');
+    var inputExpWert = document.getElementById('expWert');
+    var inputExpHerkunft = document.getElementById('expHerkunft');
+    var inputExpMaße = document.getElementById('expMaße');
+    var inputExpMaterial = document.getElementById('expMaterial');
+    var inputExpVeranst = document.getElementById('expVeranst');
+    var inputExpNote = document.getElementById('expNote');
+    var inputExpBesch = document.getElementById('expBesch');
+    var inputExpDoks = document.getElementById('expDoks');
+    var inputExpZugExp = document.getElementById('expZugExp');
+    var inputExpZust = document.getElementById('expZust');
+    var inputExpKat = document.getElementById('expKat');
+    var inputExpStandort = document.getElementById('expStandort');
 
-    if(inputValue === ""){
+    var inputExpNameValue = inputExpName.value;
+    var inputExpBaujahrValue = inputExpBaujahr.value;
+    var inputExpTitelValue = inputExpTitel.value;
+    var inputExpHerstellerValue = inputExpHersteller.value;
+    var inputExpOrgPreisValue = inputExpOrgPreis.value;
+    var inputExpWertValue = inputExpWert.value;
+    var inputExpHerkunftValue = inputExpHerkunft.value;
+    var inputExpMaßeValue = inputExpMaße.value;
+    var inputExpMaterialValue = inputExpMaterial.value;
+    var inputExpVeranstValue = inputExpVeranst.value;
+    var inputExpNoteValue = inputExpNote.value;
+    var inputExpBeschValue = inputExpBesch.value;
+    var inputExpDoksValue = inputExpDoks.value;
+    var inputExpZugExpValue = inputExpZugExp.value;
+    var inputExpZustValue = inputExpZust.value;
+    var inputExpKatValue = inputExpKat.value;
+    var inputExpStandortValue = inputExpStandort.value;
+
+    if(inputExpNameValue === ""){
         // Warnmeldung wenn der Nutzer versucht einen leeren Input abzusenden
-        alertElement.innerHTML = "Wert darf nicht leer sein!";
-        alertElement.style.display = "block";
+        console.log("Eingabe Exponaten Name.")
+
     }
     else{
         // Wert aus dem Input wird an den PHP Controller geschickt der diesen speichert
-        fetch('./inc/controller.php?add=' + encodeURIComponent(inputValue) , {
+    fetch('../verwaltung/inc/controller.php?add_exponat=true&exp_nr' + encodeURIComponent(
+            inputExpNameValue) + '&title=' 
+            , inputExpBaujahrValue
+            , inputExpTitelValue
+            , inputExpHerstellerValue
+            , inputExpOrgPreisValue
+            , inputExpWertValue
+            , inputExpHerkunftValue
+            , inputExpMaßeValue
+            , inputExpMaterialValue
+            , inputExpVeranstValue
+            , inputExpNoteValue
+            , inputExpBeschValue
+            , inputExpDoksValue
+            , inputExpZugExpValue
+            , inputExpZustValue
+            , inputExpKatValue
+            , inputExpStandortValue
+          ) , {
             method: 'GET'
         });
-        inputElement.value="";
-        alertElement.style.display = "none";
-
+        inputExpName.value="";
+        inputExpBaujahr.value="";
+        inputExpTitel.value="";
+        inputExpHersteller.value="";
+        inputExpOrgPreis.value="";
+        inputExpWert.value="";
+        inputExpHerkunft.value="";
+        inputExpMaße.value="";
+        inputExpMaterial.value="";
+        inputExpVeranst.value="";
+        inputExpNote.value="";
+        inputExpBesch.value="";
+        inputExpDoks.value="";
+        inputExpZugExp.value="";
+        inputExpZust.value="";
+        inputExpKat.value="";
+        inputExpStandort.value="";
         // danach werden die Daten wieder aus der DB ausgelesen
         // würde man das Element per js direkt ins DOM schreiben, hätte man die ID nicht welche in der Datenbank festgelegt wird
         // ist mit einem Timeout versehen, damit wird sichergestellt, dass erst der Speicherprozess der Datenbank abgeschlossen ist
@@ -46,6 +112,25 @@ function addTodo(){
             get_values();
         }, 100);
     }
+    console.log('../verwaltung/inc/controller.php?add_exponat=' + encodeURIComponent(
+            inputExpNameValue
+            , inputExpBaujahrValue
+            , inputExpTitelValue
+            , inputExpHerstellerValue
+            , inputExpOrgPreisValue
+            , inputExpWertValue
+            , inputExpHerkunftValue
+            , inputExpMaßeValue
+            , inputExpMaterialValue
+            , inputExpVeranstValue
+            , inputExpNoteValue
+            , inputExpBeschValue
+            , inputExpDoksValue
+            , inputExpZugExpValue
+            , inputExpZustValue
+            , inputExpKatValue
+            , inputExpStandortValue
+          ));
 }
 
 function displayTodos(data) {
