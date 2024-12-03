@@ -60,11 +60,19 @@
 															<!-- Break -->
 															<div class="col-12">
 																<select name="expZust" id="expZust">
+<<<<<<< HEAD
 																	<option value="0">- Zustand -</option>
 																	<option value="-1">kaputt</option>
 																	<option value="1">ok</option>
 																	<option value="2">restauriert</option>
 																	<option value="3">top</option>
+=======
+																	<option value="0">- Zustand -</option>																	
+																	<option value="1">gelagert</option>
+																	<option value="2">ausgestellt</option>
+																	<option value="3">reparaturbedürftig</option>
+																	<option value="4">verliehen</option>
+>>>>>>> 28f27cc7bf0da331621e94d6e714ee1187ae872c
 																</select>
 															</div>
 															<div class="col-12">

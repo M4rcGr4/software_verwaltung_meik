@@ -41,7 +41,7 @@ function add_exp(){
     var inputExpKat = document.getElementById('expKat');
     var inputExpStandort = document.getElementById('expStandort');
 
-    var inputExpNameValue = encodeURIComponent(inputExpName.value);
+    var inputExpNameValue = inputExpName.value;
     var inputExpBaujahrValue = inputExpBaujahr.value;
     var inputExpTitelValue = inputExpTitel.value;
     var inputExpHerstellerValue = inputExpHersteller.value;
@@ -66,27 +66,27 @@ function add_exp(){
     }
     else{
         // Wert aus dem Input wird an den PHP Controller geschickt der diesen speichert
-    fetch('../verwaltung/inc/controller.php?add_exponat=true&exp_nr' + inputExpNameValue
-            + '&title=' + inputExpBaujahrValue
-            + '&description=' + inputExpTitelValue
-            + '&producer=' + inputExpHerstellerValue
-            + '&production_year=' + inputExpBaujahrValue
-            + '&price_today=' + inputExpWertValue
-            + '&price_original=' + inputExpOrgPreisValue
-            + '&origin=' + inputExpHerkunftValue
-            + '&dimensions=' + inputExpMaßeValue
-            + '&material=' + inputExpMaterialValue
-            + '&events=' + inputExpVeranstValue
-            /*+ '&title=' + inputExpNoteValue
-            + '&title=' + inputExpBeschValue
-            + '&title=' + inputExpDoksValue
-            + '&title=' + inputExpZugExpValue
-            + '&title=' + inputExpZustValue
-            + '&title=' + inputExpKatValue
-            + '&title=' + inputExpStandortValue*/
+    fetch('../verwaltung/inc/controller.php?add_exponat=true&exp_nr' + encodeURIComponent(
+            inputExpNameValue) + '&title=' 
+            , inputExpBaujahrValue
+            , inputExpTitelValue
+            , inputExpHerstellerValue
+            , inputExpOrgPreisValue
+            , inputExpWertValue
+            , inputExpHerkunftValue
+            , inputExpMaßeValue
+            , inputExpMaterialValue
+            , inputExpVeranstValue
+            , inputExpNoteValue
+            , inputExpBeschValue
+            , inputExpDoksValue
+            , inputExpZugExpValue
+            , inputExpZustValue
+            , inputExpKatValue
+            , inputExpStandortValue
           ) , {
             method: 'GET'
-        };
+        });
         inputExpName.value="";
         inputExpBaujahr.value="";
         inputExpTitel.value="";
@@ -130,16 +130,7 @@ function add_exp(){
             , inputExpZustValue
             , inputExpKatValue
             , inputExpStandortValue
-          )+ '&title=' + inputExpBaujahrValue
-          + '&description=' + inputExpTitelValue
-          + '&producer=' + inputExpHerstellerValue
-          + '&production_year=' + inputExpBaujahrValue
-          + '&price_today=' + inputExpWertValue
-          + '&price_original=' + inputExpOrgPreisValue
-          + '&origin=' + inputExpHerkunftValue
-          + '&dimensions=' + inputExpMaßeValue
-          + '&material=' + inputExpMaterialValue
-          + '&events=' + inputExpVeranstValue);
+          ));
 }
 
 function displayTodos(data) {

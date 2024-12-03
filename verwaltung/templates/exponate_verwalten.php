@@ -21,16 +21,21 @@
 				<!-- Main -->
 					<div id="main">
 						<div class="inner">
+
+
+							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1>Verwaltung bestehender 
-											<br>Exponate</h1>
+										<h1>Verwaltung bestehender Exponate</h1>
 									</header>
+
 
 									<hr class="major" />
 
-									
-											<div class="col-6 col-12-medium">
+									<!-- Elements -->
+									 
+										<div class="row gtr-200">
+											<div class="col-12">
 											<h4>Exponate</h4>
 												<div class="table-wrapper">
 													<table class="alt">
@@ -67,8 +72,8 @@
 																	echo "<td>" . $data['Abmessungen'] . "</td>";
 																	echo "<td>" . $data['Material'] . "</td>";
 																	echo "<td>" . $data['Kategorie'] . "</td>";
-																	echo "<td>" . $data['Zustand'] . "</td>";
-																	echo "<td>" . $data['Standort'] . "</td>";
+																	echo "<td>" . $data['Zu_ID'] . "</td>";
+																	echo "<td>" . $data['Standort_ID'] . "</td>";
 																	?>
 																	<td>
 																		<form method="get">
@@ -85,10 +90,14 @@
 													</table>
 												</div>									
 											</div>
+										</div>
+
 								</section>
 
 						</div>
 					</div>
+
+				<!-- Sidebar -->
 			</div>
 
 		<!-- Scripts -->
