@@ -86,7 +86,7 @@ function add_exp(){
             , inputExpStandortValue
           ) , {
             method: 'GET'
-        });
+        };
         inputExpName.value="";
         inputExpBaujahr.value="";
         inputExpTitel.value="";
