@@ -148,6 +148,21 @@ function connect(){
         $stmt->execute(); 
     }
 
+    function get_del_exponate(){
+        /* alle gelöschten Exponate */
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT `Objekt_ID`, `Exp-Nr`, `Titel`, e.Beschreibung Beschreibung, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
+            `Material`, `Ausstellung`, `Interesse`, IFNULL(k.Bezeichnung,'') Kategorie, IFNULL(z.Bezeichnung,'') Zustand, IFNULL(s.Name,'') Standort FROM `Exponat` e
+            LEFT JOIN Kategorie k ON k.Kat_ID = e.Kat_ID 
+            LEFT JOIN Zustand z ON z.Zu_ID = e.Zu_ID
+            LEFT JOIN Standort s ON s.Standort_ID = e.Standort_ID 
+            WHERE e.Zu_ID < 0");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        json_encode($values);
+        return $values;
+    }
 /*Ende Funktionen für Exponate */
 
 /* Funktionen für Kategorien*/
@@ -259,6 +274,8 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_exponat']))){
     edit_exponat($_GET['exponat_id'],$_GET['expName'],$_GET['expTitel'],$_GET['expBesch'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
          $_GET['dimensions'],$_GET['material'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
     );
+
+    header("Location: ../index.php");
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_kategorie']))){
@@ -269,6 +286,8 @@ if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_kategorie']))){
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_kategorie']))){
     edit_kategorie($_GET['kat_id'],$_GET['kat_name'],$_GET['kat_beschreibung']);
+
+    header("Location: ../index.php");
 }
 
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_kategorie']))){
