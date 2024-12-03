@@ -102,8 +102,11 @@ function connect(){
         /* diese Funktion gibt alle Exponate aus, die nicht gelöscht sind */
         $pdo = connect();
         $stmt = $pdo->prepare("SELECT `Objekt_ID`, `Exp-Nr`, `Titel`, e.Beschreibung Beschreibung, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
-            `Material`, `Ausstellung`, `Interesse`, IFNULL(k.Bezeichnung,'') Kategorie, `Zu_ID`, `Standort_ID` FROM `Exponat` e
-            LEFT JOIN Kategorie k ON k.Kat_ID = e.Kat_ID WHERE Zu_ID > 0");
+            `Material`, `Ausstellung`, `Interesse`, IFNULL(k.Bezeichnung,'') Kategorie, IFNULL(z.Bezeichnung,'') Zustand, IFNULL(s.Name,'') Standort FROM `Exponat` e
+            LEFT JOIN Kategorie k ON k.Kat_ID = e.Kat_ID 
+            LEFT JOIN Zustand z ON z.Zu_ID = e.Zu_ID
+            LEFT JOIN Standort s ON s.Standort_ID = e.Standort_ID 
+            WHERE e.Zu_ID > 0");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -176,7 +179,7 @@ function connect(){
     function show_kategorien(){
         //Kategorie zeigen
         $pdo = connect();
-        $stmt = $pdo->prepare("SELECT Bezeichnung, Beschreibung FROM Kategorie");
+        $stmt = $pdo->prepare("SELECT Kat_ID, Bezeichnung, Beschreibung FROM Kategorie");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -184,6 +187,30 @@ function connect(){
         return $values;
     }
 /* Ende Funktionen für Kategorien*/
+
+/*Funktionen für Zustand und Standort */
+    function show_zustaende(){
+        //alle Zustände zeigen
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT Zu_ID, Bezeichnung FROM Zustand");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        json_encode($values);
+        return $values;
+    }
+
+    function show_standorte(){
+        //Standorte zeigen
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT Standort_ID, Name FROM Standort");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        json_encode($values);
+        return $values;
+    }
+/*Ende Funktionen für Zustand und Standort */
 
 /*Entgegennehmen der Daten aus js und Weitergabe an Funktionen*/
 if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['create_user']))){

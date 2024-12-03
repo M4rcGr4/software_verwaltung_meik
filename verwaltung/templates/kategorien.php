@@ -31,7 +31,7 @@
 
 									<!-- Elements -->
 										<div class="row gtr-200">
-											<div class="col-6 col-12-medium">
+											<div class="col-12-medium">
 
 													<form method="get" action="./inc/controller.php">
 														<input type="hidden" name="add_kategorie" value="true">

@@ -1452,7 +1452,9 @@ table {
     table tbody tr:nth-child(2n + 1) {
       background-color: rgba(230, 235, 237, 0.25); }
   table td {
-    padding: 0.75em 0.75em; }
+    padding: 10px 5px;
+    font-size: 14px;
+  }
   table th {
     color: #3d4449;
     font-size: 0.9em;
@@ -1582,7 +1584,7 @@ button,
 
 
 input[type="submit"].submit-icon{
-  font-family: 'Font Awesome 5';
+  font-family: 'Font Awesome 5 Free';
 }
 /* Mini Posts */
 .mini-posts article {
@@ -2279,3 +2281,13 @@ input[type="submit"].submit-icon{
     border-top: 0;
     margin-top: 0;
     padding-top: 0; }
+
+
+/* Eigene Anpassungen */
+
+#main{
+  overflow: hidden;
+}
+#main .inner{
+  padding: 0;
+}

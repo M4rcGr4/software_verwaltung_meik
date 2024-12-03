@@ -72,8 +72,8 @@
 																	echo "<td>" . $data['Abmessungen'] . "</td>";
 																	echo "<td>" . $data['Material'] . "</td>";
 																	echo "<td>" . $data['Kategorie'] . "</td>";
-																	echo "<td>" . $data['Zu_ID'] . "</td>";
-																	echo "<td>" . $data['Standort_ID'] . "</td>";
+																	echo "<td>" . $data['Zustand'] . "</td>";
+																	echo "<td>" . $data['Standort'] . "</td>";
 																	?>
 																	<td>
 																		<form method="get">
