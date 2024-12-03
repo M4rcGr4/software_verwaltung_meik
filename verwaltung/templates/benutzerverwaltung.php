@@ -1,3 +1,4 @@
+<?php include '../inc/controller.php' ?>
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -32,12 +33,32 @@
 
 									<!-- Elements -->
 										<div class="row gtr-200">
-											<div class="col-6 col-12-medium">
-
-													
+											<div class="col-12-medium">
+												<div class="table-wrapper">
+													<table class="alt">
+														<thead>
+															<tr>
+																<th>Nutzer</th>
+																<th>Berechtigung</th>																
+																<th>Anzeigename</th>
+															</tr>
+														</thead>
+														<tbody>
+															<?php
+																$daten = show_users();
+																foreach($daten as $data){
+																	echo "<tr>";
+																	echo "<td>" . $data['Anmeldung'] . "</td>";
+																	echo "<td>" . $data['Recht'] . "</td>";																	
+																	echo "<td>" . $data['Anzeigename'] . "</td>";																	
+																	echo "</tr>";
+																}
+															?>																
+														</tbody>															
+													</table>
+												</div>													
 											</div>
 										</div>
-
 								</section>
 
 						</div>
