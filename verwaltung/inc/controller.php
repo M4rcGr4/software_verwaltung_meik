@@ -91,7 +91,6 @@ function connect(){
         $origin - Herkunft/Provenienz - Standardwert falls nichts
         $dimensions - Maße/Abmessungen - Standardwert falls nichts
         $material - Material - Standardwert falls nichts
-        $accessibility - Zugänglichkeit - Standardwert falls nichts
         $events - Ausstellungen/Veranstaltungen - Standardwert falls nichts
         $visitor_interests - Notizen zum Besucherinteresse - Standardwert falls nichts
         $kat_id - ID aus der Tabelle Kategorie - Standardwert falls nichts
@@ -100,10 +99,11 @@ function connect(){
     */
 
     function get_exponate(){
-        /* diese Funktion gibt alle Exponate aus */
+        /* diese Funktion gibt alle Exponate aus, die nicht gelöscht sind */
         $pdo = connect();
-        $stmt = $pdo->prepare('SELECT `Objekt_ID`, `Exp-Nr`, `Titel`, `Beschreibung`, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
-            `Material`, `Zugang`, `Ausstellung`, `Interesse`, `Kat_ID`, `Zu_ID`, `Standort_ID` FROM `Exponat` WHERE Zu_ID > 0');
+        $stmt = $pdo->prepare("SELECT `Objekt_ID`, `Exp-Nr`, `Titel`, e.Beschreibung Beschreibung, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
+            `Material`, `Ausstellung`, `Interesse`, IFNULL(k.Bezeichnung,'') Kategorie, `Zu_ID`, `Standort_ID` FROM `Exponat` e
+            LEFT JOIN Kategorie k ON k.Kat_ID = e.Kat_ID WHERE Zu_ID > 0");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -114,7 +114,7 @@ function connect(){
         /* diese Funktion nimmt eine Exponat ID entgegen und fragt das entsprechende Exponat in der DB ab*/
         $pdo = connect();
         $stmt = $pdo->prepare('SELECT `Exp-Nr`, `Titel`, `Beschreibung`, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
-            `Material`, `Zugang`, `Ausstellung`, `Interesse`, `Kat_ID`, `Zu_ID`, `Standort_ID` FROM `Exponat` WHERE Objekt_ID=' . $exponat_id);
+            `Material`, `Ausstellung`, `Interesse`, `Kat_ID`, `Zu_ID`, `Standort_ID` FROM `Exponat` WHERE Objekt_ID=' . $exponat_id);
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

@@ -59,7 +59,7 @@
 											<span class="opener">Exponate</span>
 											<ul>
 												<li><a onclick="routing('exponate')">Exponate anlegen</a></li>
-												<li><a href="#">Exponate verwalten</a></li>
+												<li><a onclick="routing('exponate_verwalten')">Exponate verwalten</a></li>
 											</ul>
 										</li>
 										<li>
