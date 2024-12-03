@@ -40,7 +40,7 @@
 										<div class="row gtr-200">
 											<div class="col-6 col-12-medium">
 
-													<form method="post" action="#">
+													<form method="get" action="#">
 														<div class="row gtr-uniform">
 															<div class="col-6 col-12-xsmall">
 																<input type="text" name="demo-name" id="demo-name" value="" placeholder="Exp. Nummer" />

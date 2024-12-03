@@ -110,7 +110,7 @@
 	}
 
 	body, input, select, textarea {
-		color: #FFFFFF;
+		color: #2b2b2b;
 		font-family: "Source Sans Pro", sans-serif;
 		font-size: 16pt;
 		font-weight: 300;
@@ -2328,44 +2328,162 @@
 					padding-bottom: 0;
 				}
 
-		.box.special {
+				.box2 {
+					background: #fff;
+					border-radius: 3px;
+					box-shadow: 0 1px 0 0 #e5e5e5;
+					margin: 0 0 1em 0;
+					padding: 1.5em;
+				}
+			
+					.box2 > :last-child {
+						margin-bottom: 0;
+					}
+			
+					.box2.alt {
+						background: none !important;
+						border-radius: 0 !important;
+						box-shadow: none !important;
+						margin: 0 0 1em 0;
+						padding: 0 !important;
+					}
+			
+					.box2.features .features-row {
+						border-top: solid 1px #e5e5e5;
+						position: relative;
+					}
+			
+						.box2.features .features-row:after {
+							clear: both;
+							content: '';
+							display: block;
+						}
+			
+						.box2.features .features-row section {
+							float: left;
+							padding: 1.5em;
+							width: 25%;
+						}
+			
+							.box2.features .features-row section :last-child {
+								margin-bottom: 0;
+							}
+			
+							.box2.features .features-row section:nth-child(2n) {
+								padding-right: 0;
+							}
+			
+								.box2.features .features-row section:nth-child(2n):before {
+									background: #e5e5e5;
+									content: '';
+									display: block;
+									height: 50%;
+									margin-left: -1.5em;
+									position: absolute;
+									top: 0;
+									width: 1px;
+								}
+			
+							.box2.features .features-row section:nth-child(2n-1) {
+								padding-left: 0;
+							}
+			
+						.box2.features .features-row:first-child {
+							border-top: 0;
+						}
+			
+							.box.features .features-row:first-child section {
+								padding-top: 0;
+							}
+			
+						.box2.features .features-row:last-child {
+							padding-bottom: 0;
+						}
+			
+							.box2.features .features-row:last-child section {
+								padding-bottom: 0;
+							}
+
+		.box2.special2 {
 			text-align: center;
 			background-color: #003a6a;
+			color: #dddddd;
+			width: 75%;
 		}
 
-		.box .image.featured {
+		.box2 .image2.featured {
 			border-radius: 0;
 			display: block;
-			margin: 3em 0 3em -3em;
+			margin: 1.5em 0 1.5em -1.5em;
 			position: relative;
-			width: calc(100% + 6em);
+			width: calc(100% + 3em);
 		}
 
-			.box .image.featured img {
+			.box2 .image2.featured img {
 				border-radius: 0;
 				display: block;
 				width: 100%;
 			}
 
-			.box .image.featured:first-child {
-				border-radius: 6px 6px 0 0;
-				margin-bottom: 3em;
-				margin-top: -3em;
+			.box2 .image2.featured:first-child {
+				border-radius: 3px 3px 0 0;
+				margin-bottom: 1.5em;
+				margin-top: -1.5em;
 			}
 
-				.box .image.featured:first-child img {
-					border-radius: 6px 6px 0 0;
+				.box2 .image2.featured:first-child img {
+					border-radius: 3px 3px 0 0;
 				}
 
-			.box .image.featured:last-child {
-				border-radius: 0 0 6px 6px;
-				margin-bottom: -3em;
-				margin-top: 3em;
+			.box2 .image2.featured:last-child {
+				border-radius: 0 0 3px 3px;
+				margin-bottom: -1.5em;
+				margin-top: 1.5em;
 			}
 
-				.box .image.featured:last-child img {
-					border-radius: 0 0 6px 6px;
+				.box2 .image2.featured:last-child img {
+					border-radius: 0 0 3px 3px;
 				}
+		
+				.box.special {
+					text-align: center;
+					background-color: #003a6a;
+					color: #dddddd;
+				}
+		
+				.box .image.featured {
+					border-radius: 0;
+					display: block;
+					margin: 3em 0 3em -3em;
+					position: relative;
+					width: calc(100% + 6em);
+				}
+		
+					.box .image.featured img {
+						border-radius: 0;
+						display: block;
+						width: 100%;
+					}
+		
+					.box .image.featured:first-child {
+						border-radius: 6px 6px 0 0;
+						margin-bottom: 3em;
+						margin-top: -3em;
+					}
+		
+						.box .image.featured:first-child img {
+							border-radius: 6px 6px 0 0;
+						}
+		
+					.box .image.featured:last-child {
+						border-radius: 0 0 6px 6px;
+						margin-bottom: -3em;
+						margin-top: 3em;
+					}
+		
+						.box .image.featured:last-child img {
+							border-radius: 0 0 6px 6px;
+						}
 
 /* Icon */
 
@@ -3260,7 +3378,7 @@
 /* Footer */
 
 	#footer {
-		background: #f0f0f0;
+		background: #003a6a;
 		padding: 4em 0 6em 0;
 		text-align: center;
 	}
@@ -3278,7 +3396,7 @@
 			}
 
 		#footer .copyright {
-			color: #999;
+			color: whitesmoke;
 			font-size: 0.9em;
 			line-height: 1em;
 			margin: 2em 0 0 0;
