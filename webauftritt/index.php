@@ -22,25 +22,12 @@
 					<img src="./images/CI/Logo/PNG/rechteckig/weiss-transparent/isc weiss-transparent 100x47.png" alt="">
 					<nav id="nav">
 						<ul>
-							<li><a href="index.php">Home</a></li>
 							<li>
-								<a href="#" class="icon solid fa-angle-down">Layouts</a>
-								<ul>
-									<li><a href="generic.php">Generic</a></li>
-									<li><a href="contact.php">Contact</a></li>
-									<li><a href="elements.php">Elements</a></li>
-									<li>
-										<a href="#">Submenu</a>
-										<ul>
-											<li><a href="#">Option One</a></li>
-											<li><a href="#">Option Two</a></li>
-											<li><a href="#">Option Three</a></li>
-											<li><a href="#">Option Four</a></li>
-										</ul>
-									</li>
-								</ul>
+								<a href="index.php" class="fa-solid fa-house-chimney-window">Start</a>
 							</li>
-							<li><a href="#" class="button">Sign Up</a></li>
+							<li>
+								<input type="submit" value="Exponate" class="fit" href="./Exponate.php" />
+							</li>
 						</ul>
 					</nav>
 				</header>
@@ -60,45 +47,24 @@
 						<header class="major">
 							<h2>Ein Einblick in die Geschichte der IT</h2>
 						</header>
-						<span class="image featured"><img src="images/CI/Logo/PNG/quadratisch/blau-weiss/isc blau-weiss 500x500.png" alt="" /></span>
-					</section>
-
-					<section class="box special features">
-						<div class="features-row">
-							<section>
-								<span class="icon solid major fa-bolt accent2"></span>
-								<h3>Magna etiam</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
-							</section>
-							<section>
-								<span class="icon solid major fa-chart-area accent3"></span>
-								<h3>Ipsum dolor</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
-							</section>
-						</div>
-						<div class="features-row">
-							<section>
-								<span class="icon solid major fa-cloud accent4"></span>
-								<h3>Sed feugiat</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
-							</section>
-							<section>
-								<span class="icon solid major fa-lock accent5"></span>
-								<h3>Enim phasellus</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
-							</section>
-						</div>
+						<span class="image featured"><img src="images/CI/Logo/JPEG/rechteckig/blau-weiss/isc blau-weiss 500x232.jpg" alt="lol"></span>
 					</section>
 
 					<div class="row">
 						<div class="col-6 col-12-narrower">
 
 							<section class="box special">
-								<span class="image featured"><img src="images/pic02.jpg" alt="" /></span>
-								<h3>Sed lorem adipiscing</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
+								<span class="image featured"><img src="images/WaltherETR21-165-vornekl-330x320.jpg" alt="" /></span>
+								<h3>Walther ETR21</h3>
+								<p>Der ETR 21 ist ein elektronischer Tischrechner der Firma Walther.
+
+								Die Kapazität der Ein-und Ausgabe beträgt jeweils 12 Stellen die im Gegensatz zum Taschenrechner ETR 2-5, direkt zur Anzeige gebracht werden.
+
+								Rechenkapazität: 14 Stellen. Rechnet die 4 Grundrechenarten.
+
+								Konstante für alle Rechenarten.</p>
 								<ul class="actions special">
-									<li><a href="#" class="button alt">Learn More</a></li>
+									<li><a href="#" class="button alt" style="color: white;">Mehr Infos</a></li>
 								</ul>
 							</section>
 
@@ -106,11 +72,11 @@
 						<div class="col-6 col-12-narrower">
 
 							<section class="box special">
-								<span class="image featured"><img src="images/pic03.jpg" alt="" /></span>
-								<h3>Accumsan integer</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
+								<span class="image featured"><img src="images/m55.jpg" alt="" /></span>
+								<h3>Nixdorf M55</h3>
+								<p>Neue technologische Maßstäbe präsentierte Nixdorf zur ORGA-Technik 1986 in Köln. Mit eigener unterbrechungsfreier Notstromversorgung ausgestattet, gehörte der 8810 M55 von Nixdorf zu den leistungsstärksten PC-Versionen des Jahres. Er wurde ursprünglich bei der Fa.</p>
 								<ul class="actions special">
-									<li><a href="#" class="button alt">Learn More</a></li>
+									<li><a href="#" class="button alt" style="color: white;">Mehr Infos</a></li>
 								</ul>
 							</section>
 
@@ -118,29 +84,11 @@
 					</div>
 
 				</section>
-
-			<!-- CTA -->
-				<section id="cta">
-
-					<h2>Sign up for beta access</h2>
-					<p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc.</p>
-
-					<form>
-						<div class="row gtr-50 gtr-uniform">
-							<div class="col-8 col-12-mobilep">
-								<input type="email" name="email" id="email" placeholder="Email Address" />
-							</div>
-							<div class="col-4 col-12-mobilep">
-								<input type="submit" value="Sign Up" class="fit" />
-							</div>
-						</div>
-					</form>
-
-				</section>
-
+				
 			<!-- Footer -->
+			 	<footer id="footer">
 					<ul class="copyright">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						<li>&copy; Projektgruppe 4; Marwin Gorldt, Lucas Winkler, Marc Kaden</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 					</ul>
 				</footer>
 
