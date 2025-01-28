@@ -1,3 +1,16 @@
+<?php 
+	if(session_status() === PHP_SESSION_NONE){
+		session_start();
+		if(empty($_SESSION)){
+			$_SESSION['routing'] = 'anmeldung';
+			$_SESSION['anmelde_id'] = NULL;
+			$_SESSION['recht'] = 0;
+			$_SESSION['status_msg'] = "";
+		}
+	}
+	include './inc/controller.php'; 
+?>
+
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -44,52 +57,56 @@
 								</footer>
 						</div>
 					</div>
+				
+				<?php if ($_SESSION['anmelde_id'] !== NULL) { ?>
+					<!-- Sidebar -->
+						<div id="sidebar">
+							<div class="inner">
+								<!-- Menu -->
+									<nav id="menu">
+										<header class="major">
+											<h2>Menü</h2>
+										</header>
+										<ul>
+											<li><a onclick="routing('main')">Home</a></li>
+											<li>
+												<span class="opener">Exponate</span>
+												<ul>
+													<li><a onclick="routing('exponate')">Exponate anlegen</a></li>
+													<li><a onclick="routing('exponate_verwalten')">Exponate verwalten</a></li>
+													<li><a onclick="routing('exponate_neu')">Exponate neu</a></li>
+												</ul>
+											</li>
+											<li>
+												<span class="opener">Kategorien</span>
+												<ul>
+													<li><a onclick="routing('kategorien')">Kategorien anlegen</a></li>
+													<li><a onclick="routing('kategorien_verwalten')">Kategorien verwalten</a></li>
+												</ul>
+											</li>
+											<li><a onclick="routing('service')">Service</a></li>
+											<?php if($_SESSION['recht']){ ?>
+												<li>
+													<span class="opener">Adminbereich</span>
+													<ul>
+														<li><a onclick="routing('benutzerverwaltung')">Benutzerverwaltung</a></li>
+														<li><a onclick="routing('auditlog')">Audit Log</a></li>
+														<li><a onclick="routing('gelObj')">gelöschte Exponate</a></li>
+														<li><a onclick="routing('test')">Test</a></li>
+													</ul>
+												</li>
+											<?php } ?>
+											<li><a onclick="routing('anmeldung')">Abmelden</a></li>
+										</ul>
+									</nav>
 
-				<!-- Sidebar -->
-					<div id="sidebar">
-						<div class="inner">
-							<!-- Menu -->
-								<nav id="menu">
-									<header class="major">
-										<h2>Menü</h2>
-									</header>
-									<ul>
-										<li><a onclick="routing('main')">Home</a></li>
-										<li>
-											<span class="opener">Exponate</span>
-											<ul>
-												<li><a onclick="routing('exponate')">Exponate anlegen</a></li>
-												<li><a onclick="routing('exponate_verwalten')">Exponate verwalten</a></li>
-											</ul>
-										</li>
-										<li>
-											<span class="opener">Kategorien</span>
-											<ul>
-												<li><a onclick="routing('kategorien')">Kategorien anlegen</a></li>
-												<li><a href="#">Kategorien verwalten</a></li>
-											</ul>
-										</li>
-										<li><a onclick="routing('service')">Service</a></li>
-										<li><a href="#">BarCode-Scanner</a></li>
-										<li><a href="#">QR-Code Scanner</a></li>
-										<li>
-											<span class="opener">Adminbereich</span>
-											<ul>
-												<li><a onclick="routing('benutzerverwaltung')">Benutzerverwaltung</a></li>
-												<li><a onclick="routing('auditlog')">Audit Log</a></li>
-												<li><a onclick="routing('gelObj')">gelöschte Exponate</a></li>
-												<li><a onclick="routing('test')">Test</a></li>
-											</ul>
-										</li>
-									</ul>
-								</nav>
+								<!-- Footer -->
 
-							<!-- Footer -->
-
+							</div>
 						</div>
-					</div>
-
-			</div>
+				<?php } ?>
+			
+				</div>
 
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>

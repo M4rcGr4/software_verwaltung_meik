@@ -1452,12 +1452,14 @@ table {
     table tbody tr:nth-child(2n + 1) {
       background-color: rgba(230, 235, 237, 0.25); }
   table td {
-    padding: 0.75em 0.75em; }
+    padding: 10px 5px;
+    font-size: 14px;
+  }
   table th {
     color: #3d4449;
     font-size: 0.9em;
     font-weight: 600;
-    padding: 0 0.75em 0.75em 0.75em;
+    padding: 0px 10px 2px 0px;
     text-align: left; }
   table thead {
     border-bottom: solid 2px rgba(210, 215, 217, 0.75); }
@@ -1582,7 +1584,7 @@ button,
 
 
 input[type="submit"].submit-icon{
-  font-family: 'Font Awesome 5';
+  font-family: 'Font Awesome 5 Free';
 }
 /* Mini Posts */
 .mini-posts article {
@@ -2279,3 +2281,91 @@ input[type="submit"].submit-icon{
     border-top: 0;
     margin-top: 0;
     padding-top: 0; }
+
+
+/* Eigene Anpassungen */
+
+#main{
+  overflow: hidden;
+}
+#main .inner.padding-0{
+  padding: 0;
+}
+
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #8bce4c;
+  color: #ffffff3d;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+
+/* Exponate neu */
+.exponat{
+  width: 80vw;
+  padding-bottom: 30px !important;
+}
+.exponat .gray{
+  background-color: rgba(230, 235, 237, 0.25);
+}
+.exponat .four,
+.exponat .two{
+  width: 100%;
+  display: flex;
+}
+.exponat .four div,
+.exponat .two div,
+.exponat .one{
+  border-top: solid 1px rgba(210, 215, 217, 0.75);
+  border-left: solid 1px rgba(210, 215, 217, 0.75);
+  min-height: 33px;
+  height: auto;
+  padding: 5px;
+}
+.exponat .four div.border-right,
+.exponat .two div.border-right,
+.exponat .one.border-right{
+  border-right: solid 1px rgba(210, 215, 217, 0.75);
+}
+.exponat .one.border-bottom{
+  border-bottom: solid 1px rgba(210, 215, 217, 0.75);
+}
+.exponat .four div,
+.exponat .two div{
+  width: 50%;
+}

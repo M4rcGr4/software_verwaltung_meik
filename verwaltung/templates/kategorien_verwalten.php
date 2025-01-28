@@ -2,6 +2,7 @@
 	if(session_status() === PHP_SESSION_NONE){
 		session_start();
 	}
+	include '../inc/controller.php' 
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -11,7 +12,7 @@
 -->
 <html>
 	<head>
-		<title>gelöschte Exponate</title>
+		<title>Kategorien</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -28,7 +29,7 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1>gelöschte Exponate</h1>
+										<h1>Kategorien verwalten</h1>
 									</header>
 
 
@@ -36,9 +37,31 @@
 
 									<!-- Elements -->
 										<div class="row gtr-200">
-											<div class="col-6 col-12-medium">
-
-													
+											<div class="col-12-medium">
+											<h4>Kategorien</h4>
+												<div class="table-wrapper">
+													<table class="alt">
+														<thead>
+															<tr>																
+																<th>Name</th>
+																<th>Beschreibung</th>																
+															</tr>
+														</thead>
+														<tbody>
+															<?php
+																$daten = show_kategorien();
+																foreach($daten as $data){
+																	echo "<tr>";																	
+																	echo "<td>" . $data['Bezeichnung'] . "</td>";
+																	echo "<td>" . substr($data['Beschreibung'],0,30);
+																	if (strlen($data['Beschreibung'])>100) {echo " [...]";}
+																	echo "</td></tr>";											
+																}
+															?>																
+														</tbody>															
+													</table>
+												</div>									
+											</div>
 											</div>
 										</div>
 

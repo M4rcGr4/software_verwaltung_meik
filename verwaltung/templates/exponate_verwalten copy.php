@@ -2,7 +2,7 @@
 	if(session_status() === PHP_SESSION_NONE){
 		session_start();
 	}
-	include '../inc/controller.php'
+	include '../inc/controller.php' 
 ?>
 
 <!DOCTYPE HTML>

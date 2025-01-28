@@ -1,3 +1,8 @@
+<?php
+	if(session_status() === PHP_SESSION_NONE){
+		session_start();
+	}
+?>
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -31,9 +36,9 @@
 
 									<!-- Elements -->
 										<div class="row gtr-200">
-											<div class="col-6 col-12-medium">
+											<div class="col-12-medium">
 
-													<form method="get" action="./inc/controller.php">
+													<form method="post" action="./inc/controller.php">
 														<input type="hidden" name="add_kategorie" value="true">
 														<div class="row gtr-uniform">
 															<div class="col-6 col-12-xsmall">

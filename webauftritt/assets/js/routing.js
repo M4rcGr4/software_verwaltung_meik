@@ -16,7 +16,7 @@ function routing(input) {
         // wenn schon eine Route gespeichert ist wird die sessionRoute nicht verändert
         // dann wird die Route auf sessionRoute gesetzt
         if(sessionStorage.getItem("sessionRoute") == null){
-            sessionStorage.setItem("sessionRoute", 'anmeldung');
+            sessionStorage.setItem("sessionRoute", 'main');
         }
         route = sessionStorage.getItem("sessionRoute");
     }
@@ -29,7 +29,7 @@ function routing(input) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            document.getElementById("banner").innerHTML = xhr.responseText;
+            document.getElementById("main").innerHTML = xhr.responseText;
         }
     };
 

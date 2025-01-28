@@ -1,3 +1,9 @@
+<?php 
+	if(session_status() === PHP_SESSION_NONE){
+		session_start();
+	}
+	include '../inc/controller.php' 
+?>
 <!DOCTYPE HTML>
 
 <html>
@@ -27,20 +33,20 @@
 										<div class="row gtr-200">
 											<div class="col-6 col-12-medium">
 
-													<form method="get" action="./inc/controller.php">
+													<form method="post" action="./inc/controller.php">
 														<input type="hidden" name="add_exponat" id="add_exponat" value="true">
 														<div class="row gtr-uniform">
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="expName" id="expName" value="" placeholder="Exp. Nummer" />
+																<input type="text" name="expName" id="expName" value="" placeholder="Exp. Nummer (Zahl)" />
 															</div>
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="expTitel" id="expTitel" value="" placeholder="Titel" />
+																<input type="text" name="expTitel" id="expTitel" value="" placeholder="Titel (Text)" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="expBaujahr" id="expBaujahr" value="" placeholder="Baujahr" />
+																<input type="text" name="expBaujahr" id="expBaujahr" value="" placeholder="Baujahr (Zahl)" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="expHersteller" id="expHersteller" value="" placeholder="Hersteller" />
+																<input type="text" name="expHersteller" id="expHersteller" value="" placeholder="Hersteller (Text)" />
 															</div>
 															<div class="col-6 col-12-xsmall">
 																<input type="text" name="expOrgPreis" id="expOrgPreis" value="" placeholder="Org. Preis" />
@@ -60,37 +66,35 @@
 															<!-- Break -->
 															<div class="col-12">
 																<select name="expZust" id="expZust">
-<<<<<<< HEAD
-																	<option value="0">- Zustand -</option>
-																	<option value="-1">kaputt</option>
-																	<option value="1">ok</option>
-																	<option value="2">restauriert</option>
-																	<option value="3">top</option>
-=======
-																	<option value="0">- Zustand -</option>																	
-																	<option value="1">gelagert</option>
-																	<option value="2">ausgestellt</option>
-																	<option value="3">reparaturbedürftig</option>
-																	<option value="4">verliehen</option>
->>>>>>> 28f27cc7bf0da331621e94d6e714ee1187ae872c
+																	<option value="0">- Zustand wählen-</option>																	
+																	<?php
+																		$daten = show_zustaende();
+																		foreach($daten as $data){																			
+																			echo "<option value=". $data['Zu_ID'] .">" . $data['Bezeichnung'] . "</option>";																
+																		}
+																	?>
 																</select>
 															</div>
 															<div class="col-12">
 																<select name="expKat" id="expKat">
-																	<option value="0">- Kategorie -</option>
-																	<option value="-1">Ohne Kategorie</option>
-																	<option value="1">Shipping</option>
-																	<option value="2">Administration</option>
-																	<option value="3">Human Resources</option>
+																	<option value="0">- Kategorie wählen-</option>
+																	<?php
+																		$daten = show_kategorien();
+																		foreach($daten as $data){																			
+																			echo "<option value=". $data['Kat_ID'] .">" . $data['Bezeichnung'] . "</option>";																
+																		}
+																	?>
 																</select>
 															</div>
                                                             <div class="col-12">
 																<select name="expStandort" id="expStandort">
-																	<option value="0">- Standort -</option>
-																	<option value="-1">ohne Standort</option>
-																	<option value="1">Shipping</option>
-																	<option value="2">Administration</option>
-																	<option value="3">Human Resources</option>
+																	<option value="0">- Standort wählen-</option>
+																	<?php
+																		$daten = show_standorte();
+																		foreach($daten as $data){																			
+																			echo "<option value=". $data['Standort_ID'] .">" . $data['Name'] . "</option>";																
+																		}
+																	?>
 																</select>
 															</div>
 
@@ -110,13 +114,15 @@
 																<textarea name="expZugExp" id="expZugExp" placeholder="zug. Exponate" rows="6"></textarea>
 															</div>
 															<li><a href="#" class="button icon solid fa-download">Bild</a></li>
+															<p onshow="myFunction()">Test</p>
 															
 															<div class="col-12">
 																<ul class="actions">
-																	<li><input type="submit" value="Speichern" class="primary" /></li>
+																	<li><input type="submit" value="Speichern" class="primary"/></li>
 																	<li><input type="reset" value="Zurücksetzen" onclick="get_values_exp()" /></li>
 																</ul>
 															</div>
+															<div id="snackbar">Exponat gespeichert</div>
 														</div>
 													</form>
 											</div>

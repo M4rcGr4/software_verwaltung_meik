@@ -1,53 +1,23 @@
-<?php 
-	include './inc/controller.php';
-?>
 <!DOCTYPE HTML>
-<!--
-	Alpha by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
 	<head>
-		<title>MEIK - Web</title>
+		<title>MEIK</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
-	<body class="landing is-preload">
-		<div id="page-wrapper">
+	<body class="is-preload">
 
-			<!-- Header -->
-				<header id="header" class="alt">
-					<img src="./images/CI/Logo/PNG/rechteckig/weiss-transparent/isc weiss-transparent 100x47.png" alt="">
-					<nav id="nav">
-						<ul>
-							<li>
-								<a href="index.php" class="fa-solid fa-house-chimney-window" onclick="routing('main')">Start</a>
-							</li>
-							<li>
-								<input type="submit" value="Exponate" class="fit" onclick="routing('exponate')" />
-							</li>
-						</ul>
-					</nav>
-				</header>
-
-			<!-- Banner -->
-				<section id="banner">
-					<h2>MEIK</h2>
-					<p>Museum zur
-						Entwicklung der Informations- und
-						Kommunikationstechnik</p>
-				</section>
-
-			<!-- Main -->
+		<!-- Wrapper -->
+			<div id="wrapper">
+                <br>
+                <br>
 				<section id="main" class="container">
 
-					<!--<section class="box special">
+					<section class="box special">
 						<header class="major">
 							<h2>Ein Einblick in die Geschichte der IT</h2>
 						</header>
-						<span class="image featured"><img src="images/CI/Logo/JPEG/rechteckig/blau-weiss/isc blau-weiss 500x232.jpg" alt="lol"></span>
 					</section>
 
 					<div class="row">
@@ -81,25 +51,16 @@
 							</section>
 
 						</div>
-					</div>-->
-
+					</div>
 				</section>
-				
-			<!-- Footer -->
-			 	<footer id="footer">
-					<ul class="copyright">
-						<li>&copy; Projektgruppe 4; Marwin Gorldt, Lucas Winkler, Marc Kaden</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
-				</footer>
-		</div>
+			</div>
+
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<script src="./assets/js/routing.js"></script>
-			<script src="assets/js/ajax.js"></script>
-			<script src="assets/js/viewhelper.js"></script>
+
 	</body>
 </html>

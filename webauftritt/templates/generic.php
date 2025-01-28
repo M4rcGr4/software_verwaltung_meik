@@ -1,3 +1,6 @@
+<?php
+include '../inc/controller.php';
+?>
 <!DOCTYPE HTML>
 <!--
 	Alpha by HTML5 UP
@@ -5,73 +8,49 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-	<head>
-		<title>Generic - Alpha by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
 	<body class="is-preload">
+	<?php
+		$daten = get_exponate();
+		foreach($daten as $data)
+	?>
 		<div id="page-wrapper">
-
-			<!-- Header -->
-				<header id="header">
-					<h1><a href="index.html">Alpha</a> by HTML5 UP</h1>
-					<nav id="nav">
-						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li>
-								<a href="#" class="icon solid fa-angle-down">Layouts</a>
-								<ul>
-									<li><a href="generic.html">Generic</a></li>
-									<li><a href="contact.html">Contact</a></li>
-									<li><a href="elements.html">Elements</a></li>
-									<li>
-										<a href="#">Submenu</a>
-										<ul>
-											<li><a href="#">Option One</a></li>
-											<li><a href="#">Option Two</a></li>
-											<li><a href="#">Option Three</a></li>
-											<li><a href="#">Option Four</a></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-							<li><a href="#" class="button">Sign Up</a></li>
-						</ul>
-					</nav>
-				</header>
-
-			<!-- Main -->
+				<br>
+				<br>
 				<section id="main" class="container">
-					<header>
-						<h2>Generic</h2>
-						<p>A generic page for every non-generic situation.</p>
-					</header>
+					<section class="box special">
+							<header class="major">
+								<h2><div class="value"><?php echo $data['Titel']; ?></div></h2>
+							</header>
+					</section>
 					<div class="box">
 						<span class="image featured"><img src="images/pic01.jpg" alt="" /></span>
-						<h3>This is a subheading</h3>
-						<p>Cep risus aliquam gravida cep ut lacus amet. Adipiscing faucibus nunc placerat. Tempus adipiscing turpis non blandit accumsan eget lacinia nunc integer interdum amet aliquam ut orci non col ut ut praesent. Semper amet interdum mi. Phasellus enim laoreet ac ac commodo faucibus faucibus. Curae ante vestibulum ante. Blandit. Ante accumsan nisi eu placerat gravida placerat adipiscing in risus fusce vitae ac mi accumsan nunc in accumsan tempor blandit aliquet aliquet lobortis. Ultricies blandit lobortis praesent turpis. Adipiscing accumsan adipiscing adipiscing ac lacinia cep. Orci blandit a iaculis adipiscing ac. Vivamus ornare laoreet odio vis praesent nunc lorem mi. Erat. Tempus sem faucibus ac id. Vis in blandit. Nascetur ultricies blandit ac. Arcu aliquam. Accumsan mi eget adipiscing nulla. Non vestibulum ac interdum condimentum semper commodo massa arcu.</p>
 						<div class="row">
 							<div class="row-6 row-12-mobilep">
-								<h3>And now a subheading</h3>
-								<p>Adipiscing faucibus nunc placerat. Tempus adipiscing turpis non blandit accumsan eget lacinia nunc integer interdum amet aliquam ut orci non col ut ut praesent. Semper amet interdum mi. Phasellus enim laoreet ac ac commodo faucibus faucibus. Curae lorem ipsum adipiscing ac. Vivamus ornare laoreet odio vis praesent.</p>
+								<p>Baujahr: <?php echo $data['Baujahr']; ?></p>
+								<p>Hersteller: <?php echo $data['Hersteller']; ?></p>
 							</div>
 							<div class="row-6 row-12-mobilep">
-								<h3>And another subheading</h3>
-								<p>Adipiscing faucibus nunc placerat. Tempus adipiscing turpis non blandit accumsan eget lacinia nunc integer interdum amet aliquam ut orci non col ut ut praesent. Semper amet interdum mi. Phasellus enim laoreet ac ac commodo faucibus faucibus. Curae lorem ipsum adipiscing ac. Vivamus ornare laoreet odio vis praesent.</p>
+								<p>Org. Preis: <?php echo $data['OrigPreis']; ?></p>
+								<p>Wert: <?php echo $data['Wert']; ?></p>
+							</div>	
+							<div class="row-6 row-12-mobilep">
+								<p>Herkunft: <?php echo $data['Herkunft']; ?></p>
+								<p>Maße: <?php echo $data['Abmessungen']; ?></p>
+							</div>
+							<div class="row-6 row-12-mobilep">
+								<p>Kategorie: <?php echo $data['Kategorie']; ?></p>
+								<p>Material: <?php echo $data['Material']; ?></p>
+							</div>	
+						</div>
+						
+						<div class="row">
+							<div class="row-6 row-12-mobilep">
+								<h3 style="color: white; background-color: #003a6a; text-align: center;">Beschreibung</h3>
+								<p><?php echo $data['Beschreibung']; ?></p>
 							</div>
 						</div>
 					</div>
 				</section>
-
-			<!-- Footer -->
-				<footer id="footer">
-					<ul class="copyright">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
-				</footer>
-
 		</div>
 
 		<!-- Scripts -->
@@ -82,6 +61,15 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script>
+				document.addEventListener("DOMContentLoaded", function() {
+					// Warten auf das Laden der Seite
+					var banner = document.getElementById('banner'); // Hier die ID des Banners anpassen
+					if (banner) {
+						banner.style.display = 'none'; // Banner ausblenden
+					}
+				});
+			</script>
 
 	</body>
 </html>

@@ -1,4 +1,5 @@
 <?php 
+
 /*Datenbankverbindung aufbauen */
 function connect(){
     $host = 'localhost';
@@ -27,7 +28,7 @@ function connect(){
     /*
         nutzer_id - wird fortlaufend vergeben
         anmeldung - Anmeldename - Pflicht
-        Recht - Zugriffsberechtigung - Standardwert falls nichts
+        Recht - Zugriffsberechtigung - 0 (Standard), 1 (Admin)
         pw - Passwort - Pflicht
         Anzeigename - Standardwert, Anmeldung falls nichts
         geloescht - 1 wenn gelöscht
@@ -36,28 +37,29 @@ function connect(){
     function create_user($anmeldung,$recht,$passwort,$anzeigename){
         //Nutzer anlegen
         $pdo = connect();
-        $stmt = $pdo->prepare("INSERT INTO `Nutzer` (`Anmeldung`, `Recht`, `pw`, `Anzeigename`, `geloescht`) VALUES ('$anmeldung',$recht,'$passwort','$anzeigename',0)");
+        $passwort=password_hash($passwort,PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("INSERT INTO `Nutzer` (`Anmeldung`, `Recht`, `pw`, `Anzeigename`) VALUES ('$anmeldung',$recht,'$passwort','$anzeigename')");
         $stmt->execute();     
     }
 
-    function edit_user($nutzer_id,$anmeldung,$recht,$passwort,$anzeigename){
+    function edit_user($nutzer_id,$anmeldung,$recht,$anzeigename){
         //Nutzer bearbeiten
         $pdo = connect();
-        $stmt = $pdo->prepare("UPDATE `Nutzer` SET `Anmeldung`='$anmeldung', `Recht`=$recht, `pw`='$passwort', `Anzeigename`='$anzeigename' WHERE NUTZER_ID=".$nutzer_id);
+        $stmt = $pdo->prepare("UPDATE `Nutzer` SET `Anmeldung`='$anmeldung', `Recht`=$recht, `Anzeigename`='$anzeigename' WHERE NUTZER_ID=".$nutzer_id);
         $stmt->execute();        
     }
 
     function delete_user($nutzer_id){
         //Nutzer löschen
         $pdo = connect();
-        $stmt = $pdo->prepare('UPDATE `Nutzer` SET geloescht=1 WHERE NUTZER_ID='.$nutzer_id);
+        $stmt = $pdo->prepare('DELETE FROM `Nutzer` WHERE NUTZER_ID='.$nutzer_id);
         $stmt->execute();        
     }
 
     function show_users(){
         // eine Übersicht aller Nutzer ausgeben
         $pdo = connect();
-        $stmt = $pdo->prepare('SELECT `Anmeldung`, `Recht`, `Anzeigename`  FROM `Nutzer`');
+        $stmt = $pdo->prepare('SELECT `Nutzer_ID`, `Anmeldung`, `Recht`, `Anzeigename`  FROM `Nutzer`');
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -73,6 +75,38 @@ function connect(){
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         json_encode($values);
+        return $values;
+    }
+    function validate_username($username){
+        $pdo = connect();
+        $stmt = $pdo->prepare('SELECT `ANMELDUNG`  FROM `Nutzer`');
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $db_has_username = false;
+
+        for($index = 0; $index < count($values); $index++){
+            if($values[$index]['ANMELDUNG'] === $username){
+                $db_has_username = true;
+            }
+        }
+        return $db_has_username;
+    }
+    function get_password_hash($username){
+        // mit ID einen einzelnen Nutzer ausgeben
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT `pw`  FROM `Nutzer` WHERE ANMELDUNG='$username'");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $values[0]['pw'];
+    }
+    function get_user_data($username){
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT *  FROM `Nutzer` WHERE ANMELDUNG='$username'");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         return $values;
     }
 /*Ende Funktionen Benutzerverwaltung */
@@ -102,8 +136,11 @@ function connect(){
         /* diese Funktion gibt alle Exponate aus, die nicht gelöscht sind */
         $pdo = connect();
         $stmt = $pdo->prepare("SELECT `Objekt_ID`, `Exp-Nr`, `Titel`, e.Beschreibung Beschreibung, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
-            `Material`, `Ausstellung`, `Interesse`, IFNULL(k.Bezeichnung,'') Kategorie, `Zu_ID`, `Standort_ID` FROM `Exponat` e
-            LEFT JOIN Kategorie k ON k.Kat_ID = e.Kat_ID WHERE Zu_ID > 0");
+            `Material`, `Ausstellung`, `Interesse`, IFNULL(k.Bezeichnung,'') Kategorie, IFNULL(z.Bezeichnung,'') Zustand, IFNULL(s.Name,'') Standort FROM `Exponat` e
+            LEFT JOIN Kategorie k ON k.Kat_ID = e.Kat_ID 
+            LEFT JOIN Zustand z ON z.Zu_ID = e.Zu_ID
+            LEFT JOIN Standort s ON s.Standort_ID = e.Standort_ID 
+            WHERE e.Zu_ID > 0");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -145,6 +182,13 @@ function connect(){
         $stmt->execute(); 
     }
 
+    function delete_exponat($exponat_id){
+        /*Exponat löschen*/
+        $pdo = connect();
+        $stmt = $pdo->prepare("UPDATE Exponat SET Zu_ID = -1 WHERE Objekt_ID=$exponat_id");
+        $stmt->execute();
+    }
+
 /*Ende Funktionen für Exponate */
 
 /* Funktionen für Kategorien*/
@@ -176,7 +220,7 @@ function connect(){
     function show_kategorien(){
         //Kategorie zeigen
         $pdo = connect();
-        $stmt = $pdo->prepare("SELECT Bezeichnung, Beschreibung FROM Kategorie");
+        $stmt = $pdo->prepare("SELECT Kat_ID, Bezeichnung, Beschreibung FROM Kategorie");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -185,71 +229,200 @@ function connect(){
     }
 /* Ende Funktionen für Kategorien*/
 
+/*Funktionen für Zustand und Standort */
+    function show_zustaende(){
+        //alle Zustände zeigen
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT Zu_ID, Bezeichnung FROM Zustand");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        json_encode($values);
+        return $values;
+    }
+
+    function show_standorte(){
+        //Standorte zeigen
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT Standort_ID, Name FROM Standort");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        json_encode($values);
+        return $values;
+    }
+/*Ende Funktionen für Zustand und Standort */
+
 /*Entgegennehmen der Daten aus js und Weitergabe an Funktionen*/
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['create_user']))){
-    create_user($_GET['anmeldung'],$_GET['recht'],$_GET['passwort'],$_GET['anzeigename']);
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['delete_user']))){
+    delete_user($_POST['nutzer_id']);
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_user']))){
-    edit_user($_GET['nutzer_id'],$_GET['anmeldung'],$_GET['recht'],$_GET['passwort'],$_GET['anzeigename']);
-}
-
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['delete_user']))){
-    delete_user($_GET['nutzer_id']);
-}
-
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_users']))){
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_users']))){
     show_users();
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_user']))){
-    show_user($_GET['nutzer_id']);
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_user']))){
+    show_user($_POST['nutzer_id']);
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponat']))){
-    get_exponat($_GET['exponat_id']);
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['get_exponat']))){
+    get_exponat($_POST['exponat_id']);
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['get_exponate']))){
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['get_exponate']))){
     get_exponate();
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_exponat']))){
-    if(empty($_GET['expBaujahr'])){$_GET['expBaujahr'] = 0;}
-    if(empty($_GET['expWert'])){$_GET['expWert'] = 0;}
-    if(empty($_GET['expOrgPreis'])){$_GET['expOrgPreis'] = 0;}
-    add_exponat($_GET['expName'],$_GET['expTitel'],$_GET['expBesch'],$_GET['expHersteller'],$_GET['expBaujahr'],$_GET['expWert'],$_GET['expOrgPreis'],$_GET['expHerkunft'],
-         $_GET['expMaße'],$_GET['expMaterial'],$_GET['expVeranst'],$_GET['expNote'],$_GET['expKat'],$_GET['expZust'],$_GET['expStandort']
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['add_exponat']))){
+    if(empty($_POST['expBaujahr'])){$_POST['expBaujahr'] = 0;}
+    if(empty($_POST['expWert'])){$_POST['expWert'] = 0;}
+    if(empty($_POST['expOrgPreis'])){$_POST['expOrgPreis'] = 0;}
+    add_exponat($_POST['expName'],$_POST['expTitel'],$_POST['expBesch'],$_POST['expHersteller'],$_POST['expBaujahr'],$_POST['expWert'],$_POST['expOrgPreis'],$_POST['expHerkunft'],
+         $_POST['expMaße'],$_POST['expMaterial'],$_POST['expVeranst'],$_POST['expNote'],$_POST['expKat'],$_POST['expZust'],$_POST['expStandort']
     );
 
     header("Location: ../index.php");
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_exponat']))){
-    if(empty($_GET['expBaujahr'])){$_GET['expBaujahr'] = 0;}
-    if(empty($_GET['expWert'])){$_GET['expWert'] = 0;}
-    if(empty($_GET['expOrgPreis'])){$_GET['expOrgPreis'] = 0;}
-    edit_exponat($_GET['exponat_id'],$_GET['expName'],$_GET['expTitel'],$_GET['expBesch'],$_GET['producer'],$_GET['production_year'],$_GET['price_today'],$_GET['price_original'],$_GET['origin'],
-         $_GET['dimensions'],$_GET['material'],$_GET['events'],$_GET['visitor_interests'],$_GET['$kat_id'],$_GET['$zu_id'],$_GET['$location_id']
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['edit_exponat']))){
+    if(empty($_POST['expBaujahr'])){$_POST['expBaujahr'] = 0;}
+    if(empty($_POST['expWert'])){$_POST['expWert'] = 0;}
+    if(empty($_POST['expOrgPreis'])){$_POST['expOrgPreis'] = 0;}
+    edit_exponat($_POST['exp_id'],$_POST['expName'],$_POST['expTitel'],$_POST['expBesch'],$_POST['producer'],$_POST['production_year'],$_POST['price_today'],$_POST['price_original'],$_POST['origin'],
+         $_POST['dimensions'],$_POST['material'],$_POST['events'],$_POST['visitor_interests'],$_POST['expKat'],$_POST['expZust'],$_POST['expStandort']
     );
+    $_SESSION['routing'] = 'edit';
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['add_kategorie']))){
-    add_kategorie($_GET['katName'],$_GET['katBeschreib']);
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['add_kategorie']))){
+    add_kategorie($_POST['katName'],$_POST['katBeschreib']);
 
     header("Location: ../index.php");
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['edit_kategorie']))){
-    edit_kategorie($_GET['kat_id'],$_GET['kat_name'],$_GET['kat_beschreibung']);
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['edit_kategorie']))){
+    edit_kategorie($_POST['kat_id'],$_POST['kat_name'],$_POST['kat_beschreibung']);
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_kategorie']))){
-    show_kategorie($_GET['kat_id']);
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_kategorie']))){
+    show_kategorie($_POST['kat_id']);
 }
 
-if(($_SERVER['REQUEST_METHOD']==='GET') && (!empty($_GET['show_kategorien']))){
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_kategorien']))){
     show_kategorien();
 }
 
+/* Hilfsfunktionen */
+
+if(session_status() == 1){
+	session_start();
+    if(empty($_SESSION)){
+        $_SESSION['routing'] = 'anmeldung';
+        $_SESSION['anmelde_id'] = NULL;
+        $_SESSION['anmelde_name'] = "";
+        $_SESSION['recht'] = 0;
+        $_SESSION['status_msg'] = "";
+    }
+}
+
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['routing'])) && ($_SESSION['anmelde_id'] !== NULL)){
+    $_SESSION['routing'] = $_POST['routing'];
+    if ($_POST['routing'] == 'delete' || $_POST['routing'] == 'show_all' || $_POST['routing'] == 'edit') {
+        if (!empty($_POST['exp_id'])) $_SESSION['exp_id'] = $_POST['exp_id'];
+        if ($_POST['routing'] == 'delete'){
+            delete_exponat($_POST['exp_id']);
+            $_SESSION['routing'] = 'show_all';
+            $_SESSION['exp_id'] = null;
+        }
+    }
+    if ($_POST['routing'] == 'show_users' || $_POST['routing'] == 'add_user') {
+        if(($_POST['anmeldung'] == "") && ($_POST['anzeigename'] == "") && ($_POST['passwort'] == "") && ($_POST['passwort2'] == "")){
+            header("Location: ../index.php");
+        }
+        if (!empty($_POST['nutzer_id'])) {
+            $_SESSION['nutzer_id'] = $_POST['nutzer_id'];
+        } 
+        if (!empty($_POST['speichern']) && $_POST['speichern'] == '1') {
+            if ($_POST['routing'] == 'add_user') {
+                if(!empty($_POST['anmeldung'])){
+                    if(validate_username($_POST['anmeldung'])){
+                        $_POST = array();
+                        $_SESSION['status_msg'] = "username_exists";
+                    }
+                }
+                else{
+                    $_POST = array();
+                    $_SESSION['status_msg'] = "username_empty";
+                }
+                if($_POST['passwort'] === "" || $_POST['passwort2'] === ""){
+                    $_POST = array();
+                    $_SESSION['status_msg'] = "password_empty";
+                }
+                else if($_POST['passwort'] !== $_POST['passwort2']){
+                    $_POST = array();
+                    $_SESSION['status_msg'] = "password_not_equal";
+                }
+                else{
+                    create_user($_POST['anmeldung'],$_POST['recht'],$_POST['passwort'],$_POST['anzeigename']);
+                    $_SESSION['status_msg'] = "";
+                    $_SESSION['routing'] = "show_users";
+                }
+            }
+        }
+    }
+    if ($_POST['routing'] == "edit_user"){
+
+        $_SESSION['nutzer_id'] = $_POST['nutzer_id'];
+
+        if(!empty($_POST['speichern']) && $_POST['speichern'] == '1'){
+            edit_user($_POST['nutzer_id'],$_POST['anmeldung'],$_POST['recht'],$_POST['anzeigename']);
+            $_SESSION['status_msg'] = "";
+            $_SESSION['routing'] = "show_users";
+        }
+    }
+    header("Location: ../index.php");
+}
+/*Anmeldung  */
+
+if(($_SERVER['REQUEST_METHOD']==='POST') && ($_SESSION['anmelde_id'] === NULL)){
+    $username = $_POST['nutzername'];
+    if(validate_username($username)){
+
+        $password_db = get_password_hash($username);
+
+        if(password_verify($_POST['passwort'], $password_db)){
+            //echo "hurrayyyy, logged in";
+            //echo "<br> Session Status nach Anmeldung: " . session_status() . "--- <br>";
+
+            // nutzer-id und $is_admin aus db abrufen und in die Session speichern
+            // routing anpassen -> wenn anmelde_id !== NULL -> überprüfe $is_admin und gestatte nur teile des routing
+
+            $_SESSION['anmelde_id'] = get_user_data($username)[0]['Nutzer_ID'];
+            $_SESSION['anmelde_name'] = get_user_data($username)[0]['Anzeigename'];
+            $_SESSION['recht'] = get_user_data($username)[0]['Recht'];
+            $_SESSION['status_msg'] = "";
+            //session_write_close();
+            header("Location: ../index.php");
+        }
+        else{
+            $_SESSION['status_msg'] = "wrong_pw";
+            header("Location: ../index.php");
+        }
+    }
+    else{
+        $_SESSION['status_msg'] = "wrong_username";
+        header("Location: ../index.php");
+    }
+}
+elseif(($_SESSION['anmelde_id'] !== NULL) && (isset($_POST['sign_out']))){
+    $_SESSION = array();
+    $_POST = array();
+    header("Location: ../index.php");
+}
+
+if(($_SERVER['REQUEST_METHOD'] === "POST") && isset($_POST['delete_user']) && ($_POST['delete_user'] === "delete")){
+    delete_user($_POST['nutzer_id']);
+    header("Location: ../index.php");
+}
 ?>
