@@ -157,7 +157,6 @@ if ($routing != 'show_all' && $routing != 'edit') {
 															<input type="hidden" value="edit" name="routing">
 															<div class="one border-right border-bottom"><input type="submit" value="Speichern" class="primary"/></div>
 														</div>
-														
 													</form>
 												<?php
 												}

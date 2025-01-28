@@ -76,8 +76,9 @@
 									<div class="col-12-medium">
 										<div class="four">
 											<p>
+												<?php var_dump($_SESSION); ?>
 												Aktueller Benutzer: <br>
-												<strong>Bonobos Arsch</strong> <br><br>
+												<strong></strong> <br><br>
 												Berechtigungsebene: <br>
 												<strong>frag deine Mum</strong><br>
 											</p>

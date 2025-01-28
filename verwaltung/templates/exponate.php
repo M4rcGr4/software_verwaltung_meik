@@ -25,8 +25,6 @@
 									<header class="main">
 										<h1>Exponate</h1>
 									</header>
-
-
 									<hr class="major" />
 
 									<!-- Elements -->
@@ -122,7 +120,6 @@
 																	<li><input type="reset" value="Zurücksetzen" onclick="get_values_exp()" /></li>
 																</ul>
 															</div>
-															<div id="snackbar">Exponat gespeichert</div>
 														</div>
 													</form>
 											</div>
