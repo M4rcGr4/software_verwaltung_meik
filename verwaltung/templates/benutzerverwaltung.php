@@ -167,7 +167,6 @@ if ($routing !='show_users' && $routing!='edit_user' && $routing !='add_user') {
 												</div>
 											<?php } ?>
 										</div>
-
 								</section>
 
 						</div>
