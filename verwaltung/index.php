@@ -84,8 +84,15 @@
 													<li><a onclick="routing('kategorien_verwalten')">Kategorien verwalten</a></li>
 												</ul>
 											</li>
+											<li>
+												<span class="opener">Standorte</span>
+												<ul>
+													<li><a onclick="routing('standorte')">Standorte anlegen</a></li>
+													<li><a onclick="routing('standorte_verwalten')">Standorte verwalten</a></li>
+												</ul>
+											</li>
 											<li><a onclick="routing('service')">Service</a></li>
-											<?php if($_SESSION['recht']){ ?>
+											<?php if($_SESSION['recht'] == 2){ ?>
 												<li>
 													<span class="opener">Adminbereich</span>
 													<ul>

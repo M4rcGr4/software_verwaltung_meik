@@ -176,8 +176,8 @@ function connect(){
         $events, $visitor_interests, $kat_id, $zu_id, $location_id){
         /* Diese Funktion verändert ein Exponat*/
         $pdo = connect();
-        $stmt = $pdo->prepare("UPDATE Exponat SET `Exp-Nr`='$number', `Titel`='$title', `Beschreibung`='$description', `Hersteller`='$producer', `Baujahr`=$production_year,
-            `Wert`=$price_today, `OrigPreis`='$price_original', `Herkunft`='$origin', `Abmessungen`='$dimensions', `Material`='$material', `Ausstellung`='$events',
+        $stmt = $pdo->prepare("UPDATE Exponat SET `Exp-Nr`='$number', `Titel`='$title', `Beschreibung`='$description', `Hersteller`='$producer', `Baujahr`='$production_year',
+            `Wert`='$price_today', `OrigPreis`='$price_original', `Herkunft`='$origin', `Abmessungen`='$dimensions', `Material`='$material', `Ausstellung`='$events',
             `Interesse`='$visitor_interests', `Kat_ID`=$kat_id, `Zu_ID`=$zu_id, `Standort_ID`=$location_id WHERE Objekt_ID=$exponat_id");
         $stmt->execute(); 
     }
@@ -220,20 +220,38 @@ function connect(){
     function show_kategorien(){
         //Kategorie zeigen
         $pdo = connect();
-        $stmt = $pdo->prepare("SELECT Kat_ID, Bezeichnung, Beschreibung FROM Kategorie");
+        $stmt = $pdo->prepare("SELECT k.Kat_ID, k.Bezeichnung, k.Beschreibung, count(e.Objekt_ID) AnzahlExp FROM Kategorie k 
+            LEFT JOIN Exponat e on e.Kat_id=k.Kat_id GROUP BY k.kat_ID
+        ");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         json_encode($values);
         return $values;
     }
+
+    function delete_kategorie($kat_id){
+        //Kategorie löschen
+        $pdo = connect();
+        $stmt = $pdo->prepare("DELETE FROM Kategorie WHERE Kat_ID=$kat_id");
+        $stmt->execute();
+
+        $stmt = $pdo->prepare("UPDATE Exponat SET Kat_ID=0 WHERE Kat_ID=$kat_id");
+        $stmt->execute();
+    }
+    
 /* Ende Funktionen für Kategorien*/
 
 /*Funktionen für Zustand und Standort */
-    function show_zustaende(){
+    function show_zustaende($filter){
         //alle Zustände zeigen
+        $wherestr='';
+        if ($filter == 'nicht_geloescht') {
+            $wherestr = 'WHERE ZU_ID > 0'; 
+        }
+        //Filter: nicht gelöscht
         $pdo = connect();
-        $stmt = $pdo->prepare("SELECT Zu_ID, Bezeichnung FROM Zustand");
+        $stmt = $pdo->prepare("SELECT Zu_ID, Bezeichnung FROM Zustand $wherestr");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -242,15 +260,33 @@ function connect(){
     }
 
     function show_standorte(){
-        //Standorte zeigen
+        //alle Standorte zeigen
         $pdo = connect();
-        $stmt = $pdo->prepare("SELECT Standort_ID, Name FROM Standort");
+        $stmt = $pdo->prepare("SELECT s.Standort_ID, s.Name, COUNT(e.Objekt_ID) AnzahlExp FROM Standort s
+        LEFT JOIN Exponat e on e.Standort_ID=s.Standort_ID
+        GROUP BY s.Standort_ID
+        ");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         json_encode($values);
         return $values;
     }
+
+    function add_standort($standort_name){
+        //Standort anlegen
+        $pdo = connect();
+        $stmt = $pdo->prepare("INSERT INTO Standort (Name) VALUES ('$standort_name')");
+        $stmt->execute();
+    }
+
+    function edit_standort($standort_id,$standort_name){
+        //Standort bearbeiten
+        $pdo = connect();
+        $stmt = $pdo->prepare("UPDATE Standort SET Name='$standort_name' WHERE Standort_ID=$standort_id");
+        $stmt->execute();
+    }
+
 /*Ende Funktionen für Zustand und Standort */
 
 /*Entgegennehmen der Daten aus js und Weitergabe an Funktionen*/
@@ -289,8 +325,8 @@ if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['edit_exponat']))){
     if(empty($_POST['expBaujahr'])){$_POST['expBaujahr'] = 0;}
     if(empty($_POST['expWert'])){$_POST['expWert'] = 0;}
     if(empty($_POST['expOrgPreis'])){$_POST['expOrgPreis'] = 0;}
-    edit_exponat($_POST['exp_id'],$_POST['expName'],$_POST['expTitel'],$_POST['expBesch'],$_POST['producer'],$_POST['production_year'],$_POST['price_today'],$_POST['price_original'],$_POST['origin'],
-         $_POST['dimensions'],$_POST['material'],$_POST['events'],$_POST['visitor_interests'],$_POST['expKat'],$_POST['expZust'],$_POST['expStandort']
+    edit_exponat($_POST['exp_id'],$_POST['expName'],$_POST['expTitel'],$_POST['expBesch'],$_POST['expHersteller'],$_POST['expBaujahr'],$_POST['expWert'],$_POST['expOrgPreis'],$_POST['expHerkunft'],
+    $_POST['expMaße'],$_POST['expMaterial'],$_POST['expVeranst'],$_POST['expNote'],$_POST['expKat'],$_POST['expZust'],$_POST['expStandort']
     );
     $_SESSION['routing'] = 'edit';
 }
@@ -309,8 +345,18 @@ if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_kategorie']))){
     show_kategorie($_POST['kat_id']);
 }
 
-if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_kategorien']))){
-    show_kategorien();
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['add_standort']))){
+    add_standort($_POST['standortName']);
+    
+    header("Location: ../index.php");
+}
+
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['edit_standort']))){
+    edit_standort($standort_id,$standort_name);
+}
+
+if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_standorte']))){
+    show_standorte();
 }
 
 /* Hilfsfunktionen */
@@ -327,8 +373,9 @@ if(session_status() == 1){
 }
 
 if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['routing'])) && ($_SESSION['anmelde_id'] !== NULL)){
+    var_dump($_POST);
     $_SESSION['routing'] = $_POST['routing'];
-    if ($_POST['routing'] == 'delete' || $_POST['routing'] == 'show_all' || $_POST['routing'] == 'edit') {
+    if ($_POST['routing'] == 'delete' || $_POST['routing'] == 'show_all' || $_POST['routing'] == 'edit' || $_POST['routing'] == 'show_exp') {
         if (!empty($_POST['exp_id'])) $_SESSION['exp_id'] = $_POST['exp_id'];
         if ($_POST['routing'] == 'delete'){
             delete_exponat($_POST['exp_id']);
@@ -337,6 +384,8 @@ if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['routing'])) && ($_SE
         }
     }
     if ($_POST['routing'] == 'show_users' || $_POST['routing'] == 'add_user') {
+        echo "<br>";
+        var_dump($_POST);
         if(($_POST['anmeldung'] == "") && ($_POST['anzeigename'] == "") && ($_POST['passwort'] == "") && ($_POST['passwort2'] == "")){
             header("Location: ../index.php");
         }
@@ -349,6 +398,7 @@ if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['routing'])) && ($_SE
                     if(validate_username($_POST['anmeldung'])){
                         $_POST = array();
                         $_SESSION['status_msg'] = "username_exists";
+                        header("Location: ../index.php");
                     }
                 }
                 else{
@@ -380,6 +430,12 @@ if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['routing'])) && ($_SE
             $_SESSION['status_msg'] = "";
             $_SESSION['routing'] = "show_users";
         }
+    }
+    if ($_POST['routing'] == 'show_all_kat' || $_POST['routing'] == 'show_kat' || $_POST['routing'] == 'edit_kat') {
+        if (!empty($_POST['kat_id'])) $_SESSION['kat_id'] = $_POST['kat_id'];
+    }
+    if ($_POST['routing'] == 'show_all_standort' || $_POST['routing'] == 'show_standort' || $_POST['routing'] == 'edit_standort') {
+        if (!empty($_POST['standort_id'])) $_SESSION['standort_id'] = $_POST['standort_id'];
     }
     header("Location: ../index.php");
 }

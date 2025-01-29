@@ -63,10 +63,9 @@
 															</div>
 															<!-- Break -->
 															<div class="col-12">
-																<select name="expZust" id="expZust">
-																	<option value="0">- Zustand wählen-</option>																	
+																<select name="expZust" id="expZust">																	
 																	<?php
-																		$daten = show_zustaende();
+																		$daten = show_zustaende('nicht_geloescht');
 																		foreach($daten as $data){																			
 																			echo "<option value=". $data['Zu_ID'] .">" . $data['Bezeichnung'] . "</option>";																
 																		}
@@ -111,9 +110,10 @@
                                                             <div class="col-12">
 																<textarea name="expZugExp" id="expZugExp" placeholder="zug. Exponate" rows="6"></textarea>
 															</div>
-															<li><a href="#" class="button icon solid fa-download">Bild</a></li>
-															<p onshow="myFunction()">Test</p>
-															
+															<div class="col-12">
+																<a href="#" class="button icon solid fa-download">Bild</a>
+															</div>
+
 															<div class="col-12">
 																<ul class="actions">
 																	<li><input type="submit" value="Speichern" class="primary"/></li>

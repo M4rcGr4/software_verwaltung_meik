@@ -76,11 +76,22 @@
 									<div class="col-12-medium">
 										<div class="four">
 											<p>
-												<?php var_dump($_SESSION); ?>
 												Aktueller Benutzer: <br>
-												<strong></strong> <br><br>
+												<strong><?php echo $_SESSION['anmelde_name']?></strong> <br><br>
 												Berechtigungsebene: <br>
-												<strong>frag deine Mum</strong><br>
+												<strong>
+													<?php 
+														if($_SESSION['recht'] == 0){
+															echo "Betrachter";
+														}
+														else if ($_SESSION['recht'] == 1){
+															echo "Verwalter";
+														}
+														else if ($_SESSION['recht'] == 2){
+															echo "Administrator";
+														}
+													?>
+												</strong><br>
 											</p>
 											<br>
 											<form method="post" action="/verwaltung/inc/controller.php">

@@ -64,9 +64,9 @@ if ($routing !='show_users' && $routing!='edit_user' && $routing !='add_user') {
 															<table class="alt">
 																<thead>
 																	<tr>																
-																		<th>Anmeldung</th>
+																		<th>Anmeldename</th>
 																		<th>Anzeigename</th>
-																		<th>Admin</th>																
+																		<th>Berechtigungsebene des Benutzer</th>																
 																	</tr>
 																</thead>
 																<tbody>
@@ -77,10 +77,13 @@ if ($routing !='show_users' && $routing!='edit_user' && $routing !='add_user') {
 																					<td><?php echo $data['Anmeldung']?></td>
 																					<td><?php echo $data['Anzeigename']?></td>
 																					<td>
-																					<?php if ($data['Recht'] == 1) {
-																						echo "x";
-																					} else {
-																						echo " ";
+																					<?php if ($data['Recht'] == 2) {
+																						echo "Administrator";
+																					} else if ($data['Recht'] == 1) {
+																						echo "Verwalter";
+																					}
+																					else if($data['Recht'] == 0){
+																						echo "Betrachter";
 																					}
 																					?>
 																					</td>
@@ -128,8 +131,9 @@ if ($routing !='show_users' && $routing!='edit_user' && $routing !='add_user') {
 															<input type="text" name="passwort2" placeholder="123abc">
 															<label for="recht">Zugriffsberechtigung</label>
 															<select name="recht" id="recht">
-																<option value="0">Standardnutzer</option>
-																<option value="1">Admin</option>
+																<option value="0">Betrachter</option>
+																<option value="1">Verwalter</option>
+																<option value="2">Administrator</option>
 															</select>
 															<input type="hidden" name="routing" value="add_user">
 															<input type="hidden" name="speichern" value="1">
@@ -155,8 +159,9 @@ if ($routing !='show_users' && $routing!='edit_user' && $routing !='add_user') {
 															<input type="text" name="anzeigename" id="anzeigename" value="<?php echo $daten[0]['Anzeigename']?>">															
 															<label for="recht">Zugriffsberechtigung</label>															
 															<select name="recht" id="recht">
-																<option value="0"<?php if ($daten[0]['Recht'] == '0') { ?> selected <?php } ?>>Standardnutzer</option>
-																<option value="1"<?php if ($daten[0]['Recht'] == '1') { ?> selected <?php } ?>>Admin</option>
+																<option value="0"<?php if ($daten[0]['Recht'] == '0') { ?> selected <?php } ?>>Betrachter</option>
+																<option value="1"<?php if ($daten[0]['Recht'] == '1') { ?> selected <?php } ?>>Verwalter</option>
+																<option value="2"<?php if ($daten[0]['Recht'] == '2') { ?> selected <?php } ?>>Admin</option>
 															</select>
 															<input type="hidden" name="routing" value="edit_user">
 															<input type="hidden" name="speichern" value="1">
@@ -167,6 +172,7 @@ if ($routing !='show_users' && $routing!='edit_user' && $routing !='add_user') {
 												</div>
 											<?php } ?>
 										</div>
+
 								</section>
 
 						</div>

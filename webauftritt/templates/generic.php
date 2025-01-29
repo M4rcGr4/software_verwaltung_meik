@@ -1,5 +1,8 @@
 <?php
 include '../inc/controller.php';
+if(session_status() == 1){
+	session_start();
+}
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -10,7 +13,8 @@ include '../inc/controller.php';
 <html>
 	<body class="is-preload">
 	<?php
-		$daten = get_exponate();
+		$exponat_id = $_SESSION['exponat_id'];
+		$daten = get_exponat($exponat_id);
 		foreach($daten as $data)
 	?>
 		<div id="page-wrapper">

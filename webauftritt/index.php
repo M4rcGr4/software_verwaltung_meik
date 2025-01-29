@@ -1,5 +1,8 @@
 <?php 
-	include './inc/controller.php';
+if(session_status() == 1){
+	session_start();
+}
+include './inc/controller.php';
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -91,7 +94,9 @@
 						<li>&copy; Projektgruppe 4; Marwin Gorldt, Lucas Winkler, Marc Kaden</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 					</ul>
 				</footer>
+
 		</div>
+
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
@@ -101,5 +106,6 @@
 			<script src="./assets/js/routing.js"></script>
 			<script src="assets/js/ajax.js"></script>
 			<script src="assets/js/viewhelper.js"></script>
+
 	</body>
 </html>
