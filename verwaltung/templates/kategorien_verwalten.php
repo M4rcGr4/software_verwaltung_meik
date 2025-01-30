@@ -36,6 +36,24 @@
 								<section>
 									<header class="main">
 										<h1>Kategorien verwalten</h1>
+										<?php
+											if($_SESSION['status_msg'] !== "") {
+												switch (($_SESSION['status_msg']) ) {
+													case 'kat_empty':
+														echo "<h5>Kategorie konnte gespeichert werden: Der Name darf nicht leer sein.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'kat_added':
+														echo "<h5>Kategorie wurde gespeichert.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'kat_deleted':
+														echo "<h5>Kategorie wurde gelöscht.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+												}
+											}
+										?>
 									</header>
 
 
@@ -74,11 +92,20 @@
 																		<input type="hidden" name="routing" value="show_kat">
 																		<input type="submit" name="aktion" value="i" class="submit-icon">
 																	</form>
-																	<form method="post" action="/verwaltung/inc/controller.php">
-																		<input type="hidden" name="kat_id" value="<?php  echo $data['Kat_ID'] ?>">
-																		<input type="hidden" name="routing" value="edit_kat">
-																		<input type="submit" name="aktion" value="" class="submit-icon">
-																	</form>
+																	<td style='display: inline-flex;'>
+																		<form method="post" action="/verwaltung/inc/controller.php">
+																			<input type="hidden" name="kat_id" value="<?php  echo $data['Kat_ID'] ?>">
+																			<input type="hidden" name="routing" value="edit_kat">
+																			<input type="submit" name="aktion" value="" class="submit-icon">
+																		</form>
+																	</td>
+																	<td style='display: inline-flex;'>
+																		<form method="post" action="/verwaltung/inc/controller.php">
+																			<input type="hidden" name="kat_id" value="<?php  echo $data['Kat_ID'] ?>">
+																			<input type="hidden" name="routing" value="delete_kat">
+																			<input type="submit" name="aktion" value="" class="submit-icon">
+																		</form>
+																	</td>
 																	<?php
 																	echo "</td></tr>";											
 																}
@@ -94,21 +121,17 @@
 											$daten = show_kategorie($_SESSION['kat_id']);
 									?>
 										<div class="row gtr-200">
-											<form method="post" action="/verwaltung/inc/controller.php">
-												<input type="hidden" name="routing" value="show_all_kat">
-												<input type='submit' value='zurück' class='primary'/>
-											</form>
-											<div class="exponat">
-												<div class="two">
-													<div class="name">Bezeichnung</div>
-													<div class="value"><?php echo $daten[0]['Bezeichnung']; ?></div>
-												</div>
-												<div class="one">
-													Beschreibung
-												</div>
-												<div class="one">
-													<textarea readonly><?php echo $daten[0]['Beschreibung']; ?></textarea>
-												</div>
+											<div class="col-12-medium">
+												<form method="post" action="/verwaltung/inc/controller.php">
+													<input type="hidden" name="routing" value="show_all_kat">
+													<input type='submit' value='zurück' class='primary'/>
+												</form>
+												<label for="kat_bezeichnung">Bezeichnung</label>
+												<div id="kat_bezeichnung"><?php echo $daten[0]['Bezeichnung']; ?></div>
+												<label for="kat_beschreibung">Beschreibung</label>
+												<p id="kat_beschreibung"><?php echo $daten[0]['Beschreibung']; ?></p>
+												<label for="exp_count">Anzahl der zugeordneten Exponate</label>
+												<p id="exp_count"><?php echo $daten[0]['AnzahlExp']; ?></p>
 											</div>
 										</div>
 									<?php
@@ -116,28 +139,22 @@
 											$daten = show_kategorie($_SESSION['kat_id']);
 									?>
 										<div class="row gtr-200">
-											<form method="post" action="/verwaltung/inc/controller.php">
-												<input type="hidden" name="routing" value="show_all_kat">
-												<input type='submit' value='zurück' class='primary'/>
-											</form>
-											<form method="post" action="/verwaltung/inc/controller.php">
-												<div class="exponat">
-													<div class="two">
-														<div class="name">Bezeichnung</div>
-														<div class="value"><input type="text" name="kat_name" value="<?php echo $daten[0]['Bezeichnung']; ?>"></div>
-													</div>
-													<div class="one">
-														Beschreibung
-													</div>
-													<div class="one">
-														<textarea name="kat_beschreibung"><?php echo $daten[0]['Beschreibung']; ?></textarea>
-													</div>
-												</div>
-												<input type="hidden" name="routing" value="edit_kat">
-												<input type="hidden" name="edit_kategorie" value="true">
-												<input type="hidden" name="kat_id" value="<?php echo $_SESSION['kat_id'];?>">
-												<input type='submit' value='speichern' class='primary'/>
-											</form>
+											<div class="col-12-medium">
+												<form method="post" action="/verwaltung/inc/controller.php">
+													<input type="hidden" name="routing" value="show_all_kat">
+													<input type='submit' value='zurück' class='primary'/>
+												</form>
+												<h4>Kategorie bearbeiten</h4>
+												<form method="post" action="/verwaltung/inc/controller.php">
+													<label for="kat_bezeichnung">Bezeichnung</label>
+													<input id="kat_bezeichnung" type="text" name="kat_name" value="<?php echo $daten[0]['Bezeichnung']; ?>">
+													<label for="kat_beschreibung">Beschreibung</label>
+													<textarea name="kat_beschreibung"><?php echo $daten[0]['Beschreibung']; ?></textarea>
+													<input type="hidden" name="edit_kategorie" value="true">
+													<input type="hidden" name="kat_id" value="<?php echo $_SESSION['kat_id'];?>">
+													<input type='submit' value='speichern' class='primary' style="margin-top: 20px;"/>
+												</form>
+											</div>
 										</div>
 									<?php
 										}

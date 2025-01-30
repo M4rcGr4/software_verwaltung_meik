@@ -9,6 +9,7 @@
 		}
 	}
 	include './inc/controller.php'; 
+	var_dump($_SESSION);
 ?>
 
 <!DOCTYPE HTML>
@@ -74,7 +75,6 @@
 												<ul>
 													<li><a onclick="routing('exponate')">Exponate anlegen</a></li>
 													<li><a onclick="routing('exponate_verwalten')">Exponate verwalten</a></li>
-													<li><a onclick="routing('exponate_neu')">Exponate neu</a></li>
 												</ul>
 											</li>
 											<li>
@@ -91,14 +91,13 @@
 													<li><a onclick="routing('standorte_verwalten')">Standorte verwalten</a></li>
 												</ul>
 											</li>
-											<li><a onclick="routing('service')">Service</a></li>
 											<?php if($_SESSION['recht'] == 2){ ?>
 												<li>
 													<span class="opener">Adminbereich</span>
 													<ul>
 														<li><a onclick="routing('benutzerverwaltung')">Benutzerverwaltung</a></li>
 														<li><a onclick="routing('auditlog')">Audit Log</a></li>
-														<li><a onclick="routing('gelObj')">gelöschte Exponate</a></li>
+														<li><a onclick="routing('tickets')">Tickets</a></li>
 														<li><a onclick="routing('test')">Test</a></li>
 													</ul>
 												</li>

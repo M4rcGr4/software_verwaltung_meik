@@ -29,6 +29,24 @@
 								<section>
 									<header class="main">
 										<h1>Kategorien</h1>
+										<?php
+											if($_SESSION['status_msg'] !== "") {
+												switch (($_SESSION['status_msg']) ) {
+													case 'kat_empty':
+														echo "<h5>Kategorie konnte nicht angelegt werden: Der Name darf nicht leer sein.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'kat_exists':
+														echo "<h5>Kategorie konnte nicht angelegt werden: Die Kategorie existiert bereits.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'kat_added':
+														echo "<h5>Kategorie wurde hinzugefügt.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+												}
+											}
+										?>
 									</header>
 
 

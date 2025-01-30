@@ -24,6 +24,24 @@
 								<section>
 									<header class="main">
 										<h1>Exponate</h1>
+										<?php
+											if ($_SESSION['status_msg'] !== "") {
+												switch ($_SESSION['status_msg']) {
+													case 'expName':
+														echo "<h5>Exponat konnte nicht gespeichert werden: Die Exponat-Nr. darf nicht leer sein.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'expTitel':
+														echo "<h5>Exponat konnte nicht gespeichert werden: Der Titel darf nicht leer sein.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'expBesch':
+														echo "<h5>Exponat konnte nicht gespeichert werden: Die Beschreibung darf nicht leer sein.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;													
+												}
+											}
+										?>
 									</header>
 									<hr class="major" />
 
@@ -35,16 +53,16 @@
 														<input type="hidden" name="add_exponat" id="add_exponat" value="true">
 														<div class="row gtr-uniform">
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="expName" id="expName" value="" placeholder="Exp. Nummer (Zahl)" />
+																<input type="text" name="expName" id="expName" value="" placeholder="Exp. Nummer" />
 															</div>
 															<div class="col-6 col-12-xsmall">
-																<input type="text" name="expTitel" id="expTitel" value="" placeholder="Titel (Text)" />
+																<input type="text" name="expTitel" id="expTitel" value="" placeholder="Titel" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="expBaujahr" id="expBaujahr" value="" placeholder="Baujahr (Zahl)" />
+																<input type="text" name="expBaujahr" id="expBaujahr" value="" placeholder="Baujahr" />
 															</div>
                                                             <div class="col-6 col-12-xsmall">
-																<input type="text" name="expHersteller" id="expHersteller" value="" placeholder="Hersteller (Text)" />
+																<input type="text" name="expHersteller" id="expHersteller" value="" placeholder="Hersteller" />
 															</div>
 															<div class="col-6 col-12-xsmall">
 																<input type="text" name="expOrgPreis" id="expOrgPreis" value="" placeholder="Org. Preis" />

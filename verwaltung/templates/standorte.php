@@ -29,6 +29,24 @@
 								<section>
 									<header class="main">
 										<h1>Standorte</h1>
+										<?php
+											if($_SESSION['status_msg'] !== "") {
+												switch (($_SESSION['status_msg']) ) {
+													case 'standort_empty':
+														echo "<h5>Standort konnte nicht angelegt werden: Der Name darf nicht leer sein.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'standort_exists':
+														echo "<h5>Standort konnte nicht angelegt werden: Der Standort existiert bereits.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'standort_added':
+														echo "<h5>Standort wurde hinzugefügt.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+												}
+											}
+										?>
 									</header>
 
 

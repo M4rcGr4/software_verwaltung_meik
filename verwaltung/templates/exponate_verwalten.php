@@ -80,9 +80,17 @@
 																	echo "<td>" . $data['Baujahr'] . "</td>";
 																	echo "<td>" . $data['Wert'] . "</td>";																	
 																	echo "<td>" . $data['Material'] . "</td>";
-																	echo "<td>" . $data['Kategorie'] . "</td>";
+																	if ($data['Kategorie'] === "") {
+																		echo "<td>(ohne Kategorie)</td>";
+																	} else {
+																		echo "<td>" . $data['Kategorie'] . "</td>";
+																	}
 																	echo "<td>" . $data['Zustand'] . "</td>";
-																	echo "<td>" . $data['Standort'] . "</td>";
+																	if ($data['Standort'] === "") {
+																		echo "<td>(ohne Standort)</td>";
+																	} else {
+																		echo "<td>" . $data['Standort'] . "</td>";
+																	}																		
 																	?>
 																	<td>
 																		<form method="post" action="/verwaltung/inc/controller.php">
@@ -231,25 +239,25 @@
 												</div>
 												<div class="four">
 													<div class="name">Baujahr</div>
-													<div class="value"><input type="text" name="expBaujahr" value="<?php echo $data['Baujahr']; ?> "></div>
+													<div class="value"><input type="text" name="expBaujahr" value="<?php echo $data['Baujahr']; ?>"></div>
 													<div class="name">Hersteller</div>
-													<div class="value border-right"><input type="text" name="expHersteller" value="<?php echo $data['Hersteller']; ?> "></div>
+													<div class="value border-right"><input type="text" name="expHersteller" value="<?php echo $data['Hersteller']; ?>"></div>
 												</div>
 												<div class="four gray">
 													<div class="name">Org. Preis</div>
-													<div class="value"><input type="text" name="expOrgPreis" value="<?php echo $data['OrigPreis']; ?> "></div>
+													<div class="value"><input type="text" name="expOrgPreis" value="<?php echo $data['OrigPreis']; ?>"></div>
 													<div class="name">Wert</div>
-													<div class="value border-right"><input type="text" name="expWert" value="<?php echo $data['Wert']; ?> "></div>
+													<div class="value border-right"><input type="text" name="expWert" value="<?php echo $data['Wert']; ?>"></div>
 												</div>
 												<div class="four">
 													<div class="name">Herkunft</div>
-													<div class="value"><input type="text" name="expHerkunft" value="<?php echo $data['Herkunft']; ?> "></div>
+													<div class="value"><input type="text" name="expHerkunft" value="<?php echo $data['Herkunft']; ?>"></div>
 													<div class="name">Maße</div>
 													<div class="value border-right"><input type="text" name="expMaße" value="<?php echo $data['Abmessungen']; ?>"></div>
 												</div>
 												<div class="four gray">
 													<div class="name">Material</div>
-													<div class="value"><input type="text" name="expMaterial" value="<?php echo $data['Material']; ?> "></div>
+													<div class="value"><input type="text" name="expMaterial" value="<?php echo $data['Material']; ?>"></div>
 													<div class="name">Zustand</div>
 													<div class="value border-right">
 														<select name="expZust" id="expZust">
