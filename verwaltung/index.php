@@ -8,8 +8,7 @@
 			$_SESSION['status_msg'] = "";
 		}
 	}
-	include './inc/controller.php'; 
-	var_dump($_SESSION);
+	include './inc/controller.php';
 ?>
 
 <!DOCTYPE HTML>
@@ -73,21 +72,27 @@
 											<li>
 												<span class="opener">Exponate</span>
 												<ul>
-													<li><a onclick="routing('exponate')">Exponate anlegen</a></li>
+													<?php if($_SESSION['recht'] == "1" || $_SESSION['recht'] == "2") { ?>
+														<li><a onclick="routing('exponate')">Exponate anlegen</a></li>
+													<?php } ?>
 													<li><a onclick="routing('exponate_verwalten')">Exponate verwalten</a></li>
 												</ul>
 											</li>
 											<li>
 												<span class="opener">Kategorien</span>
 												<ul>
-													<li><a onclick="routing('kategorien')">Kategorien anlegen</a></li>
+													<?php if($_SESSION['recht'] == "1" || $_SESSION['recht'] == "2") { ?>
+														<li><a onclick="routing('kategorien')">Kategorien anlegen</a></li>
+													<?php } ?>
 													<li><a onclick="routing('kategorien_verwalten')">Kategorien verwalten</a></li>
 												</ul>
 											</li>
 											<li>
 												<span class="opener">Standorte</span>
 												<ul>
-													<li><a onclick="routing('standorte')">Standorte anlegen</a></li>
+													<?php if($_SESSION['recht'] == "1" || $_SESSION['recht'] == "2") { ?>
+														<li><a onclick="routing('standorte')">Standorte anlegen</a></li>
+													<?php } ?>
 													<li><a onclick="routing('standorte_verwalten')">Standorte verwalten</a></li>
 												</ul>
 											</li>
@@ -99,6 +104,7 @@
 														<li><a onclick="routing('auditlog')">Audit Log</a></li>
 														<li><a onclick="routing('tickets')">Tickets</a></li>
 														<li><a onclick="routing('test')">Test</a></li>
+														<li><a onclick="routing('qrcode')"></a></li>
 													</ul>
 												</li>
 											<?php } ?>
@@ -123,6 +129,9 @@
 			<script src="./assets/js/routing.js"></script>
 			<script src="assets/js/ajax.js"></script>
 			<script src="assets/js/viewhelper.js"></script>
-
+			<script src="assets/js/qrCodeGen/qrcode.js"></script>
+        	<script src="assets/js/qrCodeGen/jquery.min.js"></script>
+			<script src="assets/js/qrCodeGen/create.js"></script>
+												
 	</body>
 </html>

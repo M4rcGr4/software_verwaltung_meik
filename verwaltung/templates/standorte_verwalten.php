@@ -91,6 +91,9 @@
 																			<input type="submit" name="aktion" value="i" class="submit-icon">
 																		</form>
 																	</td>
+																	<?php
+																		if($_SESSION['recht'] == "1" || $_SESSION['recht'] == "2"){
+																	?>
 																	<td style="display: inline-flex">
 																		<form method="post" action="/verwaltung/inc/controller.php">
 																			<input type="hidden" name="standort_id" value="<?php  echo $data['Standort_ID'] ?>">
@@ -98,6 +101,10 @@
 																			<input type="submit" name="aktion" value="" class="submit-icon">
 																		</form>
 																	</td>
+																	<?php } ?>
+																	<?php
+																		if($_SESSION['recht'] == "2"){
+																	?>
 																	<td style="display: inline-flex">
 																		<form method="post" action="/verwaltung/inc/controller.php">
 																			<input type="hidden" name="standort_id" value="<?php  echo $data['Standort_ID'] ?>">
@@ -105,6 +112,7 @@
 																			<input type="submit" name="aktion" value="" class="submit-icon">
 																		</form>
 																	</td>
+																	<?php } ?>
 																	<?php
 																	echo "</tr>";
 																}

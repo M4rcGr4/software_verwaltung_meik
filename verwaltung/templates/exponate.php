@@ -35,8 +35,8 @@
 														echo "<h5>Exponat konnte nicht gespeichert werden: Der Titel darf nicht leer sein.</h5>";
 														$_SESSION['status_msg'] = "";
 														break;
-													case 'expBesch':
-														echo "<h5>Exponat konnte nicht gespeichert werden: Die Beschreibung darf nicht leer sein.</h5>";
+													case 'expBaujahr':
+														echo "<h5>Exponat konnte nicht gespeichert werden: Bitte geben Sie ein gültiges Baujahr an.</h5>";
 														$_SESSION['status_msg'] = "";
 														break;													
 												}

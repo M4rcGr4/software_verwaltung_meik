@@ -11,13 +11,13 @@ function toggleAnimation(){
     sidebar.classList.toggle('animated');
     container.classList.toggle('animated');
 }
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
     const menu = document.querySelector('.sidebar .menu i');
 
     menu.addEventListener('click', () => {
         toggleSidebar();
     });
-});
+});*/
 
 function checkScreenSize() {
     if (window.innerWidth < 751) { // Prüft, ob die Bildschirmbreite kleiner als 600px ist

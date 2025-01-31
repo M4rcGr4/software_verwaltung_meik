@@ -2,6 +2,7 @@
 	if(session_status() === PHP_SESSION_NONE){
 		session_start();
 	}
+	include '../inc/controller.php'; 
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -19,14 +20,17 @@
 	<body class="is-preload">
 
 		<!-- Wrapper -->
-			<div id="wrapper">
+			<div id="wrapper" style="width: 100%;">
 
 				<!-- Main -->
 					<div id="main">
-						<div class="inner">
+						<div class="inner padding-0">
 
+							<?php
+								$log = show_log();
+							?>
 							<!-- Content -->
-								<section>
+								<section style="padding: 0 !important;">
 									<header class="main">
 										<h1>Audit Log</h1>
 									</header>
@@ -36,8 +40,62 @@
 
 									<!-- Elements -->
 										<div class="row gtr-200">
-											<div class="col-6 col-12-medium">
+											<div class="col-12">
 
+												<div class="table-wrapper">
+													<?php
+														echo '<table class="alt">';
+														echo '<thead>';
+														echo "<tr>
+																<th>Eintragsnummer</th>
+																<th>Datum</th>
+																<th>Nutzer</th>
+																<th>Typ der Änderung</th>
+																<th>Art des geänderten Objektes</th>
+																<th>Objekt ID</th>
+																<th>geänderte Daten</th>
+															</tr>";
+														echo '</thead>';
+														echo '<tbody>';
+														foreach ($log as $id){
+															$username = get_username($id['Edit_Nutzer_ID']);
+															if($id['Log_add_edit'] == "delete"){
+																$add_edit = "hat gelöscht";
+
+															}else if($id['Log_add_edit'] == "add"){
+																$add_edit = "hat hinzugefügt";
+
+															}else if($id['Log_add_edit'] == "edit"){
+																$add_edit = "hat editiert";
+
+															}
+															if($id['Log_Typ'] == 0){
+																$log_typ = "Exponat";
+															}
+															else if($id['Log_Typ'] == 1){
+																$log_typ = "Kategorie";
+															}
+															else if($id['Log_Typ'] == 2){
+																$log_typ = "Standort";
+															}
+															else if($id['Log_Typ'] == 3){
+																$log_typ = "Nutzer";
+															}
+
+															echo "<tr>";
+															echo "<td>" . $id['Log_ID'] . "</td>";
+															echo "<td>" . $id['Log_Datum'] . "</td>";
+															echo "<td>" . $username . "</td>";
+															echo "<td>" . $add_edit . "</td>";
+															echo "<td>" . $log_typ . "</td>";
+															echo "<td>" . $id['Log_Obj_ID'] . "</td>";
+															echo "<td>" . substr($id['Log_Text'] , 0, 30). "</td>";
+															echo "</tr>";
+														}
+														echo '</tbody>';
+														echo "</table>";
+													?>
+												</div>
 													
 											</div>
 										</div>

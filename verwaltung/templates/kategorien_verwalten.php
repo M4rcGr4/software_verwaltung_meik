@@ -92,6 +92,9 @@
 																		<input type="hidden" name="routing" value="show_kat">
 																		<input type="submit" name="aktion" value="i" class="submit-icon">
 																	</form>
+																	<?php
+																		if($_SESSION['recht'] == "1" || $_SESSION['recht'] == "2"){
+																	?>
 																	<td style='display: inline-flex;'>
 																		<form method="post" action="/verwaltung/inc/controller.php">
 																			<input type="hidden" name="kat_id" value="<?php  echo $data['Kat_ID'] ?>">
@@ -99,6 +102,10 @@
 																			<input type="submit" name="aktion" value="" class="submit-icon">
 																		</form>
 																	</td>
+																	<?php } ?>
+																	<?php
+																		if($_SESSION['recht'] == "2"){
+																	?>
 																	<td style='display: inline-flex;'>
 																		<form method="post" action="/verwaltung/inc/controller.php">
 																			<input type="hidden" name="kat_id" value="<?php  echo $data['Kat_ID'] ?>">
@@ -106,6 +113,7 @@
 																			<input type="submit" name="aktion" value="" class="submit-icon">
 																		</form>
 																	</td>
+																	<?php } ?>
 																	<?php
 																	echo "</td></tr>";											
 																}

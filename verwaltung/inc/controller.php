@@ -84,15 +84,25 @@ function arrayToString(array $array): string {
         $location_id - Id aus der Tabelle Standort - Pflicht
     */
 
-    function get_exponate(){
+    function get_exponate($filter){
         /* diese Funktion gibt alle Exponate aus, die nicht gelöscht sind */
+        $wherestr="";
+        if ($filter !== "") {
+            /*exponate mit hightlight=1 - für tickets.php*/
+            switch ($filter) {
+                case 'ticket_highlight':
+                $wherestr=" and IFNULL(highlight,0)=1";
+                break;
+            }
+        } 
+
         $pdo = connect();
         $stmt = $pdo->prepare("SELECT `Objekt_ID`, `Exp-Nr`, `Titel`, e.Beschreibung Beschreibung, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
             `Material`, `Ausstellung`, `Interesse`, IFNULL(k.Bezeichnung,'') Kategorie, IFNULL(z.Bezeichnung,'') Zustand, IFNULL(s.Name,'') Standort FROM `Exponat` e
             LEFT JOIN Kategorie k ON k.Kat_ID = e.Kat_ID 
             LEFT JOIN Zustand z ON z.Zu_ID = e.Zu_ID
             LEFT JOIN Standort s ON s.Standort_ID = e.Standort_ID 
-            WHERE e.Zu_ID > 0");
+            WHERE e.Zu_ID > 0 $wherestr");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -122,8 +132,14 @@ function arrayToString(array $array): string {
             values ('$number','$title','$description','$producer','$production_year','$price_today','$price_original','$origin','$dimensions',
             '$material','$events','$visitor_interests',$kat_id,$zu_id,$location_id)");
         $stmt->execute();
+        
+        /* letzte ID für Log holen */
+        $stmt = $pdo->prepare("SELECT MAX(Objekt_ID) letzte_ID FROM Exponat");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $new_exponat = [
+            "exponat_id" => $values[0]['letzte_ID'],
             "number" => $number,
             "title" => $title,
             "description" => $description,
@@ -140,8 +156,7 @@ function arrayToString(array $array): string {
             "zu_id" => $zu_id,
             "location_id" => $location_id
         ];
-
-        write_log($new_exponat, "add", 0, 0);
+        write_log($new_exponat, "add", 0, $values[0]['letzte_ID']);
     }
 
     function edit_exponat(
@@ -184,7 +199,7 @@ function arrayToString(array $array): string {
         $exp_to_delete = get_exponat($exponat_id)[0];
 
         $pdo = connect();
-        $stmt = $pdo->prepare("UPDATE Exponat SET Zu_ID = -1 WHERE Objekt_ID=$exponat_id");
+        $stmt = $pdo->prepare("DELETE FROM Exponat WHERE Objekt_ID=$exponat_id");
         $stmt->execute();
 
         write_log($exp_to_delete, "delete", 0, $exponat_id);
@@ -220,19 +235,23 @@ function arrayToString(array $array): string {
                 $has_changed = true;
             }
         }
-        var_dump($has_changed);
         return $has_changed;
     }
 
     function validate_exponat() {
         $empty_feld="";
-        $pflichtfelder = ['expBesch','expTitel','expName'];
+        $pflichtfelder = ['expTitel','expName'];
         foreach ($pflichtfelder as $feld) {
             if (empty($_POST[$feld])) {$empty_feld = $feld;}
         }
-        if ($empty_feld !== "") {
-            return $empty_feld;
+
+        if (is_numeric($_POST['expBaujahr'])) {
+            if ($_POST['expBaujahr'] < 0001 || $_POST['expBaujahr'] > 9999) {$empty_feld = 'expBaujahr';}
+        } else {
+            $empty_feld = 'expBaujahr';
         }
+        return $empty_feld;
+       
 
     }
 
@@ -246,7 +265,7 @@ function arrayToString(array $array): string {
 
     if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['add_exponat']))){
         if (validate_exponat() !== "") {
-            $_SESSION['status_msg'] = validate_exponat();
+            $_SESSION['status_msg'] = validate_exponat();    
             $_POST = array();
         } else {
             if(empty($_POST['expBaujahr'])){$_POST['expBaujahr'] = 0;}
@@ -274,15 +293,58 @@ function arrayToString(array $array): string {
 /* //////////////////////////////////////////////// Kategorien /////////////////////////////////////////// */
 /* /////////////////////////////////////////////////////////////////////////////////////////////////////// */
 
+    function has_kategorie_changed($new_kategorie){
+        $current_kat = show_kategorie($new_kategorie['kat_id'])[0];
+        $kat_id = $new_kategorie['kat_id'];
+        $has_changed = false;
+
+        unset($new_kategorie['kat_id']);
+        unset($current_kat['AnzahlExp']);
+
+        $keyMapping = [
+            "kat_name" => "Bezeichnung",
+            "kat_beschreibung" => "Beschreibung"
+        ];
+
+        foreach ($keyMapping as $key1 => $key2) {
+            if ((string)$new_kategorie[$key1] !== (string)$current_kat[$key2]) {
+                $has_changed = true;
+            }
+        }
+        return $has_changed;
+    }
     function add_kategorie($kat_name, $kat_beschreibung){
         //Kategorie anlegen
         $pdo = connect();
         $stmt = $pdo->prepare("INSERT INTO Kategorie (Bezeichnung,Beschreibung) VALUES ('$kat_name','$kat_beschreibung')");
         $stmt->execute();
+
+        /* letzte ID für Log holen */
+        $stmt = $pdo->prepare("SELECT MAX(Kat_ID) letzte_ID FROM Kategorie");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $new_kat = [
+            "kat_id" => $values[0]['letzte_ID'],
+            "kat_bezeichnung" => $kat_name,
+            "kat_beschreibung" => $kat_beschreibung
+        ];
+        write_log($new_kat, "add", 1, $values[0]['letzte_ID']);
     }
 
     function edit_kategorie($kat_id,$kat_name, $kat_beschreibung){
         //Kategorie bearbeiten
+
+        $new_kategorie = [
+            "kat_id" => $kat_id,
+            "kat_name" => $kat_name,
+            "kat_beschreibung" => $kat_beschreibung
+        ];
+
+        if(has_kategorie_changed($new_kategorie)){
+            write_log($new_kategorie, "edit", 1, $kat_id);
+        }
+
         $pdo = connect();
         $stmt = $pdo->prepare("UPDATE Kategorie SET Bezeichnung='$kat_name', Beschreibung='$kat_beschreibung' WHERE Kat_ID=$kat_id");
         $stmt->execute();
@@ -318,12 +380,16 @@ function arrayToString(array $array): string {
 
     function delete_kategorie($kat_id){
         //Kategorie löschen
+        $kat_to_delete = show_kategorie($kat_id)[0];
+
         $pdo = connect();
         $stmt = $pdo->prepare("DELETE FROM Kategorie WHERE Kat_ID=$kat_id");
         $stmt->execute();
 
         $stmt = $pdo->prepare("UPDATE Exponat SET Kat_ID=0 WHERE Kat_ID=$kat_id");
         $stmt->execute();
+
+        write_log($kat_to_delete, "delete", 1, $kat_id);
     }
 
     function validate_kategorie($kategorie){
@@ -387,6 +453,26 @@ function arrayToString(array $array): string {
 /* /////////////////////////////////////////////////////////////////////////////////////////////////////// */
 /* //////////////////////////////////////////////// STANDORTE //////////////////////////////////////////// */
 /* /////////////////////////////////////////////////////////////////////////////////////////////////////// */
+    function has_standort_changed($new_standort){
+        $current_standort = show_standort($new_standort['standort_id'])[0];
+        $standort_id = $new_standort['standort_id'];
+        $has_changed = false;
+
+        unset($new_standort['standort_id']);
+        unset($current_standort['Standort_ID']);
+        unset($current_standort['AnzahlExp']);
+
+        $keyMapping = [
+            "standort_name" => "Name"
+        ];
+
+        foreach ($keyMapping as $key1 => $key2) {
+            if ((string)$new_standort[$key1] !== (string)$current_standort[$key2]) {
+                $has_changed = true;
+            }
+        }
+        return $has_changed;
+    }
     function show_standorte(){
         //alle Standorte zeigen
         $pdo = connect();
@@ -421,10 +507,31 @@ function arrayToString(array $array): string {
         $pdo = connect();
         $stmt = $pdo->prepare("INSERT INTO Standort (Name) VALUES ('$standort_name')");
         $stmt->execute();
+
+        /* letzte ID für Log holen */
+        $stmt = $pdo->prepare("SELECT MAX(Standort_ID) letzte_ID FROM Standort");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $new_standort = [
+            "standort_id" => $values[0]['letzte_ID'],
+            "standort_name" => $standort_name,
+        ];
+        write_log($new_standort, "add", 2, $values[0]['letzte_ID']);
     }
 
-    function edit_standort($standort_id,$standort_name){
+    function edit_standort($standort_id, $standort_name){
         //Standort bearbeiten
+
+        $new_standort = [
+            "standort_id" => $standort_id,
+            "standort_name" => $standort_name
+        ];
+
+        if(has_standort_changed($new_standort)){
+            write_log($new_standort, "edit", 2, $standort_id);
+        }
+
         $pdo = connect();
         $stmt = $pdo->prepare("UPDATE Standort SET Name='$standort_name' WHERE Standort_ID=$standort_id");
         $stmt->execute();
@@ -432,12 +539,16 @@ function arrayToString(array $array): string {
     function delete_standort($standort_id){
         /* alle zugeordneten Exponate in default_standort verschieben */
         /* Standort löschen */
+        $standort_to_delete = show_standort($standort_id)[0];
+
         $pdo = connect();
         $stmt = $pdo->prepare("DELETE FROM Standort WHERE Standort_ID=$standort_id");
         $stmt->execute();
         
         $stmt = $pdo->prepare("UPDATE Exponat SET Standort_ID=0 WHERE Standort_ID=$standort_id");
         $stmt->execute();
+
+        write_log($standort_to_delete, "delete", 2, $standort_id);
     }
 
     function validate_standort($standort){
@@ -507,16 +618,70 @@ function arrayToString(array $array): string {
         geloescht - 1 wenn gelöscht
     */
 
+    function has_user_changed($new_user){
+        $current_user = show_user($new_user['nutzer_id'])[0];
+        $user_id = $new_user['nutzer_id'];
+        $has_changed = false;
+
+        unset($new_user['nutzer_id']);
+
+        $keyMapping = [
+            "anmelde_name" => "Anmeldung",
+            "berechtigung" => "Recht",
+            "anzeigename" => "Anzeigename"
+        ];
+
+        foreach ($keyMapping as $key1 => $key2) {
+            if ((string)$new_user[$key1] !== (string)$current_user[$key2]) {
+                $has_changed = true;
+            }
+        }
+        return $has_changed;
+    }
+
     function create_user($anmeldung,$recht,$passwort,$anzeigename){
         //Nutzer anlegen
         $pdo = connect();
         $passwort=password_hash($passwort,PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("INSERT INTO `Nutzer` (`Anmeldung`, `Recht`, `pw`, `Anzeigename`) VALUES ('$anmeldung',$recht,'$passwort','$anzeigename')");
         $stmt->execute();     
+
+        /* letzte ID für Log holen */
+        $stmt = $pdo->prepare("SELECT MAX(Nutzer_ID) letzte_ID FROM Nutzer");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($recht == 0){
+            $berechtigung = "betrachter";
+        }else if($recht==1){
+            $berechtigung = "verwalter";
+        }else{
+            $berechtigung = "admin";
+        }
+
+        $new_nutzer = [
+            "nutzer_id" => $values[0]['letzte_ID'],
+            "anmelde_name" => $anmeldung,
+            "berechtigung" => $berechtigung,
+            "anzeigename" => $anzeigename
+        ];
+        write_log($new_nutzer, "add", 3, $values[0]['letzte_ID']);
     }
 
     function edit_user($nutzer_id,$anmeldung,$recht,$anzeigename){
         //Nutzer bearbeiten
+
+        $new_user = [
+            "nutzer_id" => $nutzer_id,
+            "anmelde_name" => $anmeldung,
+            "berechtigung" => $recht,
+            "anzeigename" => $anzeigename
+        ];
+
+        if(has_user_changed($new_user)){
+            write_log($new_user, "edit", 3, $nutzer_id);
+        }
+
         $pdo = connect();
         $stmt = $pdo->prepare("UPDATE `Nutzer` SET `Anmeldung`='$anmeldung', `Recht`=$recht, `Anzeigename`='$anzeigename' WHERE NUTZER_ID=".$nutzer_id);
         $stmt->execute();        
@@ -524,9 +689,13 @@ function arrayToString(array $array): string {
 
     function delete_user($nutzer_id){
         //Nutzer löschen
+        $user_to_delete = show_user($nutzer_id)[0];
+
         $pdo = connect();
         $stmt = $pdo->prepare('DELETE FROM `Nutzer` WHERE NUTZER_ID='.$nutzer_id);
         $stmt->execute();        
+
+        write_log($user_to_delete, "delete", 3, $nutzer_id);
     }
 
     function show_users(){
@@ -565,6 +734,15 @@ function arrayToString(array $array): string {
         }
         return $db_has_username;
     }
+    function get_username($username){
+        $pdo = connect();
+        $stmt = $pdo->prepare('SELECT `ANMELDUNG`  FROM `Nutzer`');
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $username = $values[0]['ANMELDUNG'];
+
+        return $username;
+    }
     function get_password_hash($username){
         // mit ID einen einzelnen Nutzer ausgeben
         $pdo = connect();
@@ -591,7 +769,9 @@ function arrayToString(array $array): string {
                 delete_exponat($_POST['exp_id']);
                 $_SESSION['routing'] = 'show_all';
                 $_SESSION['exp_id'] = null;
+                header("Location: ../index.php");
             }
+            header("Location: ../index.php");
         }
         if ($_POST['routing'] == 'show_users' || $_POST['routing'] == 'add_user') {
             if(($_POST['anmeldung'] == "") && ($_POST['anzeigename'] == "") && ($_POST['passwort'] == "") && ($_POST['passwort2'] == "")){
@@ -599,6 +779,7 @@ function arrayToString(array $array): string {
             }
             if (!empty($_POST['nutzer_id'])) {
                 $_SESSION['nutzer_id'] = $_POST['nutzer_id'];
+                header("Location: ../index.php");
             } 
             if (!empty($_POST['speichern']) && $_POST['speichern'] == '1') {
                 if ($_POST['routing'] == 'add_user') {
@@ -612,19 +793,23 @@ function arrayToString(array $array): string {
                     else{
                         $_POST = array();
                         $_SESSION['status_msg'] = "username_empty";
+                        header("Location: ../index.php");
                     }
                     if($_POST['passwort'] === "" || $_POST['passwort2'] === ""){
                         $_POST = array();
                         $_SESSION['status_msg'] = "password_empty";
+                        header("Location: ../index.php");
                     }
                     else if($_POST['passwort'] !== $_POST['passwort2']){
                         $_POST = array();
                         $_SESSION['status_msg'] = "password_not_equal";
+                        header("Location: ../index.php");
                     }
                     else{
                         create_user($_POST['anmeldung'],$_POST['recht'],$_POST['passwort'],$_POST['anzeigename']);
                         $_SESSION['status_msg'] = "";
                         $_SESSION['routing'] = "show_users";
+                        header("Location: ../index.php");
                     }
                 }
             }
@@ -637,21 +822,20 @@ function arrayToString(array $array): string {
                 edit_user($_POST['nutzer_id'],$_POST['anmeldung'],$_POST['recht'],$_POST['anzeigename']);
                 $_SESSION['status_msg'] = "";
                 $_SESSION['routing'] = "show_users";
+                header("Location: ../index.php");
             }
+            header("Location: ../index.php");
         }
         if ($_POST['routing'] == 'show_all_kat' || $_POST['routing'] == 'show_kat' || $_POST['routing'] == 'edit_kat') {
             if (!empty($_POST['kat_id'])) $_SESSION['kat_id'] = $_POST['kat_id'];
+            header("Location: ../index.php");
         }
         if ($_POST['routing'] == 'show_all_standort' || $_POST['routing'] == 'show_standort' || $_POST['routing'] == 'edit_standort') {
             if (!empty($_POST['standort_id'])) $_SESSION['standort_id'] = $_POST['standort_id'];
+            header("Location: ../index.php");
         }
-        header("Location: ../index.php");
     }
 /*Anmeldung  */
-
-    if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['delete_user']))){
-        delete_user($_POST['nutzer_id']);
-    }
 
     if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_users']))){
         show_users();
@@ -659,6 +843,13 @@ function arrayToString(array $array): string {
 
     if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_user']))){
         show_user($_POST['nutzer_id']);
+    }
+
+    if(($_SERVER['REQUEST_METHOD'] === "POST") && (isset($_POST['delete_user'])) && (($_POST['delete_user'] === "delete"))){}
+
+    if(($_SERVER['REQUEST_METHOD'] === "POST") && ($_POST['routing'] == "delete_user")){
+        delete_user($_POST['nutzer_id']);
+        header("Location: ../index.php");
     }
 
     if(($_SERVER['REQUEST_METHOD']==='POST') && ($_SESSION['anmelde_id'] === NULL)){
@@ -689,11 +880,6 @@ function arrayToString(array $array): string {
     elseif(($_SESSION['anmelde_id'] !== NULL) && (isset($_POST['sign_out']))){
         $_SESSION = array();
         $_POST = array();
-        header("Location: ../index.php");
-    }
-
-    if(($_SERVER['REQUEST_METHOD'] === "POST") && isset($_POST['delete_user']) && ($_POST['delete_user'] === "delete")){
-        delete_user($_POST['nutzer_id']);
         header("Location: ../index.php");
     }
 
@@ -728,6 +914,7 @@ function show_log(){
     $stmt = $pdo->prepare('SELECT * FROM `Log`');
     $stmt->execute();
     $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $values;
 }
 
 ?>

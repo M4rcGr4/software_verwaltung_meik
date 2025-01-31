@@ -67,8 +67,8 @@
 															</tr>
 														</thead>
 														<tbody>
-															<?php
-																$daten = get_exponate();
+															<?php																
+																$daten = get_exponate('');
 																foreach($daten as $data){
 																	echo "<tr>";
 																	echo "<td>" . $data['Exp-Nr'] . "</td>";
@@ -98,17 +98,29 @@
 																			<input type="hidden" name="routing" value="show_exp">
 																			<input type="submit" name="aktion" value="i" class="submit-icon">
 																		</form>
+																	</td>
+																	<?php
+																	if($_SESSION['recht'] == "1" || $_SESSION['recht'] == "2"){
+																	?>
+																	<td>
 																		<form method="post" action="/verwaltung/inc/controller.php">
 																			<input type="hidden" name="exp_id" value="<?php  echo $data['Objekt_ID'] ?>">
 																			<input type="hidden" name="routing" value="edit">
 																			<input type="submit" name="aktion" value="" class="submit-icon">
 																		</form>
+																	</td>
+																	<?php } ?>
+																	<?php
+																	if($_SESSION['recht'] == "2"){
+																	?>
+																	<td>
 																		<form method="post" action="/verwaltung/inc/controller.php">
 																			<input type="hidden" name="exp_id" value="<?php  echo $data['Objekt_ID'] ?>">
 																			<input type="hidden" name="routing" value="delete">
-																			<input type="submit" name="aktion" value="del" class="submit-icon">
+																			<input type="submit" name="aktion" value="" class="submit-icon">
 																		</form>
 																	</td>
+																	<?php } ?>
 																	<?php
 																	echo "</tr>";
 																}
@@ -217,7 +229,7 @@
 													<div class="value border-right"></div>
 												</div>
 												<div class="one border-right gray">ausführl. Beschreibung</div>
-												<div class="one border-right"><textarea rows="6" name="" readonly><?php echo $data['Beschreibung']; ?></textarea></div>
+												<div class="one border-right"><p><?php echo $data['Beschreibung']; ?></p></div>
 												<input type="hidden" name="exp_id" value="<?php echo $_SESSION['exp_id']; ?>">
 											</div>
 									<?php

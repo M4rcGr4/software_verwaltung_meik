@@ -97,6 +97,7 @@ if ($routing !='show_users' && $routing!='edit_user' && $routing !='add_user') {
 																					</td>
 																					<td>
 																					<form method="post" action="/verwaltung/inc/controller.php">
+																						<input type="hidden" name="routing" value="delete_user">
 																						<input type="hidden" name="delete_user" value="delete">
 																						<input type='hidden' name='nutzer_id' value='<?php echo $data['Nutzer_ID']?>'>
 																						<input type='submit' value='Löschen' class='primary'/>
@@ -137,7 +138,7 @@ if ($routing !='show_users' && $routing!='edit_user' && $routing !='add_user') {
 															</select>
 															<input type="hidden" name="routing" value="add_user">
 															<input type="hidden" name="speichern" value="1">
-															<input type='submit' value='speichern' class='primary'/>
+															<input type='submit' value='speichern' class='primary' style="margin-top: 20px;"/>
 														</form>
 													</div>
 												</div>
@@ -166,7 +167,7 @@ if ($routing !='show_users' && $routing!='edit_user' && $routing !='add_user') {
 															<input type="hidden" name="routing" value="edit_user">
 															<input type="hidden" name="speichern" value="1">
 															<input type='hidden' name='nutzer_id' value='<?php echo $_SESSION['nutzer_id']?>'>
-															<input type='submit' value='speichern' class='primary'/>
+															<input type='submit' value='speichern' class='primary' style="margin-top: 20px;"/>
 														</form>
 													</div>
 												</div>

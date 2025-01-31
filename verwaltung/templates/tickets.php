@@ -36,10 +36,42 @@
 
 									<!-- Elements -->
 										<div class="row gtr-200">
-											<div class="col-6 col-12-medium">
-
-													
+											<?php if (false) { ?>
+											<div class="col-12" style="display: none;">
+												<h4>vorgemerkte Exponate für den Webauftritt</h4>
+												<div class="table-wrapper">
+													<table class="alt">
+														<thead>
+															<tr>
+																<th>Exp.-Nr.</th>
+																<th>Titel</th>
+																<th>Ablehnen</th>
+																<th>Freigeben</th>
+															</tr>
+														</thead>
+														<tbody>
+														
+														</tbody>
+													</table>
+												</div>
+												<h4>ausgeblendete Exponate zum Löschen</h4>
+												<div class="table-wrapper">
+													<table class="alt">
+														<thead>
+															<tr>
+																<th>Exp.-Nr.</th>
+																<th>Name</th>
+																<th>Name</th>
+																<th>Name</th>
+															</tr>
+														</thead>
+														<tbody>
+														
+														</tbody>
+													</table>
+												</div>
 											</div>
+											<?php } ?>
 										</div>
 
 								</section>

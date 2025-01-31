@@ -1440,7 +1440,7 @@ ul.pagination {
 /* Table */
 .table-wrapper {
   -webkit-overflow-scrolling: touch;
-  overflow-x: auto; }
+  overflow-x: auto;}
 
 table {
   margin: 0 0 2em 0;
@@ -1847,7 +1847,9 @@ input[type="submit"].submit-icon{
   -webkit-flex-direction: row-reverse;
   -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
-  min-height: 100vh; }
+  min-height: 100vh; 
+  width: 100%;
+}
 
 /* Main */
 #main {

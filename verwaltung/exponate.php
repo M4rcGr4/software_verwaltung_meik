@@ -144,8 +144,6 @@
                                 </header>
                                 <ul>
                                     <li><a href="index.php">Home</a></li>
-                                    <!--<li><a href="generic.html">Generic</a></li>
-                                    <li><a href="elements.html">Elements</a></li>-->
                                     <li>
                                         <span class="opener">Exponate</span>
                                         <ul>
@@ -161,15 +159,7 @@
                                         </ul>
                                     </li>
                                     <li><a href="./service.php">Service</a></li>
-                                    <!--<li>
-                                        <span class="opener">Another Submenu</span>
-                                        <ul>
-                                            <li><a href="#">Lorem Dolor</a></li>
-                                            <li><a href="#">Ipsum Adipiscing</a></li>
-                                            <li><a href="#">Tempus Magna</a></li>
-                                            <li><a href="#">Feugiat Veroeros</a></li>
-                                        </ul>
-                                    </li>-->
+       
                                     <li><a href="#">BarCode-Scanner</a></li>
                                     <li><a href="#">QR-Code Scanner</a></li>
                                     <li>
