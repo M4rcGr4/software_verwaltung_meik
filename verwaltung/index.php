@@ -6,6 +6,8 @@
 			$_SESSION['anmelde_id'] = NULL;
 			$_SESSION['recht'] = 0;
 			$_SESSION['status_msg'] = "";
+			$_SESSION['exp_filter'] = "";
+			$_SESSION['exp_sort'] = "";
 		}
 	}
 	include './inc/controller.php';

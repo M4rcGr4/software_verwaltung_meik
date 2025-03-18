@@ -38,6 +38,24 @@
 								<section>
 									<header class="main">
 										<h1>Verwaltung bestehender Exponate</h1>
+										<?php
+											if($_SESSION['status_msg'] !== "") {
+												switch (($_SESSION['status_msg']) ) {
+													case 'show_exp_web':
+														echo "<h5>Das Exponat wurde für den Webauftritt vorgemerkt.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'notshow_exp_web':
+														echo "<h5>Das Exponat wurde aus dem Webauftritt entfernt.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+													case 'del_exp_prepare':
+														echo "<h5>Das Exponat wurde zum Löschen vorgemerkt.</h5>";
+														$_SESSION['status_msg'] = "";
+														break;
+												}
+											}
+										?>
 									</header>
 
 
@@ -50,28 +68,237 @@
 										<div class="row gtr-200">
 											<div class="col-12">
 											<h4>Exponate</h4>
+												<?php // Filtermaske 
+												if ($_SESSION['exp_filter'] != "") {
+													$filter_array=explode("|",$_SESSION['exp_filter']);
+												} else {
+													$filter_array=explode("|","|||||||||");
+												}
+												?>
+												<form method="post" action="/verwaltung/inc/controller.php">
+													<div style="display: flex;">
+														<input type="text" name="exp_nr" value="<?php if ($filter_array[0] != "") echo $filter_array[0]; ?>" placeholder="Exp-Nr">
+														<input type="text" name="exp_name" value="<?php if ($filter_array[1] != "") echo $filter_array[1]; ?>" placeholder="Titel">
+														<input type="text" name="exp_besch" value="<?php if ($filter_array[2] != "") echo $filter_array[2]; ?>" placeholder="Beschreibung">
+													</div>
+													<div style="display: flex;">
+													<input type="text" name="exp_hersteller" value="<?php if ($filter_array[3] != "") echo $filter_array[3]; ?>" placeholder="Hersteller">
+														<select name="exp_jahr">
+															<option value="0" <?php if ($filter_array[4] == "0") echo "selected"; ?>>alle Jahre anzeigen</option>
+															<?php
+																$daten = exp_jahre();
+																foreach($daten as $data){																			
+																	echo "<option value=". $data['Baujahr'] . "";
+																	if ($filter_array[4] == $data['Baujahr']) echo " selected";
+																	echo ">" . $data['Baujahr'] . "</option>";																
+																}
+															?>
+														</select>
+														<input type="text" name="exp_wert" value="<?php if ($filter_array[5] != "") echo $filter_array[5]; ?>" placeholder="Wert">
+													</div>
+													<div style="display: flex;">
+														<input type="text" name="exp_material" value="<?php if ($filter_array[6] != "") echo $filter_array[6]; ?>" placeholder="Material">
+														<select name="exp_kat">
+															<option value="0" <?php if ($filter_array[7] == "0") echo "selected"; ?>>alle Kategorien anzeigen</option>
+															<?php
+																$daten = show_kategorien();
+																foreach($daten as $data){																			
+																	echo "<option value=". $data['Kat_ID'] . "";
+																	if ($filter_array[7] == $data['Kat_ID']) echo " selected";
+																	echo ">" . $data['Bezeichnung'] . "</option>";																
+																}
+															?>
+														</select>
+														<select name="exp_zust">
+															<option value="0" <?php if ($filter_array[8] == "0") echo "selected"; ?>>alle Zustände anzeigen</option>
+															<?php
+																$daten = show_zustaende('nicht_geloescht');
+																foreach($daten as $data){																			
+																	echo "<option value=". $data['Zu_ID'] . "";
+																	if ($filter_array[8] == $data['Zu_ID']) echo " selected";
+																	echo ">" . $data['Bezeichnung'] . "</option>";																
+																}
+															?>
+														</select>
+														<select name="exp_stand">
+															<option value="0" <?php if ($filter_array[9] == "0") echo "selected"; ?>>alle Standorte anzeigen</option>
+															<?php
+																$daten = show_standorte();
+																foreach($daten as $data){																			
+																	echo "<option value=". $data['Standort_ID'] . ""; 
+																	if ($filter_array[9] == $data['Standort_ID']) echo " selected";
+																	echo ">" . $data['Name'] . "</option>";																
+																}
+															?>
+														</select>
+													</div>
+													<input type="submit" value="suchen">
+													<input type="hidden" name="filter" value="1">
+													<input type="hidden" name="routing" value="show_all">
+												</form>
+												<form method="post" action="/verwaltung/inc/controller.php">
+													<input type="submit" value="Filter zurücksetzen">
+													<input type="hidden" name="filter" value="-1">
+													<input type="hidden" name="routing" value="show_all">
+												</form>
+											</div>
+										</div>
+										<div class="row gtr-200">
+											<div class="col-12">
 												<div class="table-wrapper">
 													<table class="alt">
 														<thead>
 															<tr>
-																<th>Exp.-Nr.</th>
-																<th>Name</th>
-																<th>Beschreibung</th>
-																<th>Hersteller</th>
-																<th>Baujahr</th>
-																<th>Wert</th>																
-																<th>Material</th>
-																<th>Kategorie</th>
-																<th>Zustand</th>
-																<th>Standort</th>
+																<th>Exp.-Nr.
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"1")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="1">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"1")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>
+																<th>Name
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"2")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="2">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"2")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>
+																<th>Beschreibung
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"3")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="3">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"3")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>
+																<th>Hersteller
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"4")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="4">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"4")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>
+																<th>Baujahr
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"5")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="5">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"5")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>
+																<th>Wert
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"6")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="6">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"6")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>																
+																<th>Material
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"7")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="7">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"7")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>
+																<th>Kategorie
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"8")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="8">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"8")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>
+																<th>Zustand
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"9")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="9">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"9")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>
+																<th>Standort
+																	<form method="post" action="/verwaltung/inc/controller.php">
+																		<a href="javascript:void(0);" onclick="parentNode.submit();" class="icon">
+																			<?php if(str_contains($_SESSION['exp_sort'],"asc") && str_contains($_SESSION['exp_sort'],"10")) { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h12v2H3m0 5v-2h18v2M3 6h6v2H3Z"/></svg>
+																			<?php } else { ?>
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h12v-2H3m0-5v2h18V6M3 18h6v-2H3z"/></svg>
+																			<?php } ?>
+																		</a>
+																		<input type="hidden" name="routing" value="show_all">
+																		<input type="hidden" name="sort" value="10">
+																		<input type="hidden" name="orderby" value="<?php if(str_contains($_SESSION['exp_sort'],"desc") && str_contains($_SESSION['exp_sort'],"10")) { echo "asc"; } else { echo "desc"; } ?>">
+																	</form>
+																</th>
 															</tr>
 														</thead>
 														<tbody>
 															<?php																
-																$daten = get_exponate('');
+																$daten = get_exponate($_SESSION['exp_filter'],$_SESSION['exp_sort']);																
 																foreach($daten as $data){
 																	echo "<tr>";
-																	echo "<td>" . $data['Exp-Nr'] . "</td>";
+																	echo "<td>" . $data['Exp-Nr'];
+																	if ($data['mark_web'] == 2) {echo "<br><span style='color: green;'>W</span>";}
+																	echo "</td>";
 																	echo "<td>" . $data['Titel'] . "</td>";
 																	echo "<td>" . substr($data['Beschreibung'],0,30);
 																	if (strlen($data['Beschreibung'])>30) {echo " [...]";}
@@ -116,7 +343,8 @@
 																	<td>
 																		<form method="post" action="/verwaltung/inc/controller.php">
 																			<input type="hidden" name="exp_id" value="<?php  echo $data['Objekt_ID'] ?>">
-																			<input type="hidden" name="routing" value="delete">
+																			<input type="hidden" name="routing" value="show_all">
+																			<input type="hidden" name="del_exp" value="true">
 																			<input type="submit" name="aktion" value="" class="submit-icon">
 																		</form>
 																	</td>
@@ -139,7 +367,22 @@
 											<input type="hidden" name="routing" value="show_all">
 											<input type='submit' value='zurück' class='primary'/>
 										</form>
+										<?php
+											if($_SESSION['recht'] > 0){
+										?>
+											<form method="post" action="/verwaltung/inc/controller.php">
+												<input type="hidden" name="exp_id" value="<?php  echo $_SESSION['exp_id'] ?>">
+												<input type="hidden" name="routing" value="edit">
+												<input type="submit" name="aktion" value="Bearbeiten" class="submit-icon">
+											</form>
+										<?php } ?>										
 										<div class="exponat">
+												<?php if ($data['mark_web'] > 0) {
+													echo "<div class='one border-right gray'><strong>";
+														if ($data['mark_web'] == 1) {echo "In Freigabe für Webauftritt";}
+														if ($data['mark_web'] == 2) {echo "Im Webauftritt enthalten";}
+													echo "</strong></div>";
+												}?>
 												<div class="four gray">
 													<div class="name">Exp-Nr.</div>
 													<div class="value"><?php echo $data['Exp-Nr']; ?></div>
@@ -236,13 +479,43 @@
 									} elseif ($routing === 'edit') {
 										$daten = get_exponat($_SESSION['exp_id']);
 										$data = $daten[0];
-									?>
-										<form method="post" action="/verwaltung/inc/controller.php">
-											<input type="hidden" name="routing" value="show_all">
-											<input type='submit' value='zurück' class='primary'/>
-										</form>
+										?>
+										<div style="display: inline-flex;">
+											<form method="post" action="/verwaltung/inc/controller.php">
+												<input type="hidden" name="routing" value="show_all">
+												<input type='submit' value='zurück' class='primary'/>
+											</form>											
+											<?php if ($data['mark_web'] != 1) { ?>
+												<form method="post" action="/verwaltung/inc/controller.php">
+													<input type="hidden" name="exp_id" value="<?php echo $_SESSION['exp_id']; ?>">
+													<input type="hidden" name="show_exp_in_web" value="true">
+													<input type='submit' <?php if ($data['mark_web'] == 2) { ?> style="background-color: red;" <?php } ?> value='Webauftritt' class='primary'/>
+												</form>
+											<?php }	?>
+											<?php if ($data['mark_delete'] != 1 && $data['mark_web'] != 2) { ?>
+												<form method="post" action="/verwaltung/inc/controller.php">
+													<input type="hidden" name="exp_id" value="<?php echo $_SESSION['exp_id']; ?>">
+													<input type="hidden" name="del_exp" value="true">
+													<input type='submit' style="background-color: red;" value='Löschung beantragen' class='primary'/>
+												</form>
+											<?php }	?>
+											<?php if ($data['mark_delete'] != 1) { ?>
+												<form method="post" action="/verwaltung/inc/controller.php">
+													<input type="hidden" name="exp_id" value="<?php echo $_SESSION['exp_id']; ?>">
+													<input type="hidden" name="pdf_erzeugen" value="true">
+													<input type="hidden" name="routing" value="<?php echo $routing; ?>">
+													<input type='submit' value='PDF erzeugen' class='primary'/>
+												</form>
+											<?php }	?>
+										</div>
 										<form method="post" action="/verwaltung/inc/controller.php">
 											<div class="exponat">
+												<?php if ($data['mark_web'] > 0) {
+													echo "<div class='one border-right gray'><strong>";
+														if ($data['mark_web'] == 1) {echo "In Freigabe für Webauftritt";}
+														if ($data['mark_web'] == 2) {echo "Im Webauftritt enthalten";}
+													echo "</strong></div>";
+												}?>
 												<div class="four gray">
 													<div class="name">Exp-Nr.</div>
 													<div class="value"><input type="text" name="expName" value="<?php echo $data['Exp-Nr']; ?>"></div>
@@ -331,12 +604,12 @@
 													<div class="value"></div>
 													<div class="value border-right"></div>
 												</div>
-												<div class="one border-right gray">ausführl. Beschreibung</div>
-												<div class="one border-right"><textarea rows="6" name="expBesch" ><?php echo $data['Beschreibung']; ?></textarea></div>
+												<div class="one border-right">ausführl. Beschreibung</div>
+												<div class="one border-right gray"><textarea rows="6" name="expBesch" ><?php echo $data['Beschreibung']; ?></textarea></div>
 												<input type="hidden" name="exp_id" value="<?php echo $_SESSION['exp_id']; ?>">
 												<input type="hidden" value="edit" name="routing">
 												<input type="hidden" value="true" name="edit_exponat">
-												<div class="one border-right border-bottom"><input type="submit" value="Speichern" class="primary"/></div>
+												<div class="one border-right gray border-bottom"><input type="submit" value="Speichern" class="primary"/></div>
 											</div>
 										</form>
 									<?php

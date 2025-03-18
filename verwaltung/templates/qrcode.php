@@ -2,7 +2,7 @@
 	if(session_status() === PHP_SESSION_NONE){
 		session_start();
 	}
- include './test.php'
+ include '../phpqrcode/qrlib.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -11,9 +11,19 @@
     </head>
       <body>
         <h2>QR Code</h2>
-      <?php
-     
-      ?>
+            <?php
+                function createQR( $id )
+                {
+                    $text = "http://meik-gr4.industrieschule.de/webauftritt/" . $id;
+                    $filename = "../qrcodes/Test" . $id;
+                
+                    
+                    QRcode::png( $text, $filename, QR_ECLEVEL_M );
+                    return $filename;
+                }
+                $filename = createQR( 9999 );
+                echo $filename;
+            ?>
 
       
         <script src="assets/js/jquery.min.js"></script>

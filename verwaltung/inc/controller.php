@@ -9,6 +9,8 @@ if(session_status() == 1){
         $_SESSION['anmelde_name'] = "";
         $_SESSION['recht'] = 0;
         $_SESSION['status_msg'] = "";
+        $_SESSION['exp_filter']="";
+        $_SESSION['exp_sort']="";
     }
 }
 
@@ -84,25 +86,93 @@ function arrayToString(array $array): string {
         $location_id - Id aus der Tabelle Standort - Pflicht
     */
 
-    function get_exponate($filter){
+    function get_exponate($filter,$sort){
         /* diese Funktion gibt alle Exponate aus, die nicht gelöscht sind */
         $wherestr="";
         if ($filter !== "") {
-            /*exponate mit hightlight=1 - für tickets.php*/
-            switch ($filter) {
-                case 'ticket_highlight':
-                $wherestr=" and IFNULL(highlight,0)=1";
-                break;
+            if (str_contains($filter,"|")) {
+                //Filter aus Exponate verwalten
+                $filter_array = explode("|",$filter);
+                if ($filter_array[0] != "") $wherestr=$wherestr." and `Exp-Nr` like '%$filter_array[0]%'";
+                if ($filter_array[1] != "") $wherestr=$wherestr." and `Titel` like '%$filter_array[1]%'";
+                if ($filter_array[2] != "") $wherestr=$wherestr." and e.Beschreibung like '%$filter_array[2]%'";
+                if ($filter_array[3] != "") $wherestr=$wherestr." and `Hersteller` like '%$filter_array[3]%'";
+                if ($filter_array[4] != "0") $wherestr=$wherestr." and `Baujahr`=$filter_array[4]";
+                if ($filter_array[5] != "") $wherestr=$wherestr." and `Wert` like '%$filter_array[5]%'";
+                if ($filter_array[6] != "") $wherestr=$wherestr." and `Material` like '%$filter_array[6]%'";
+                if ($filter_array[7] != "0") $wherestr=$wherestr." and e.Kat_ID=$filter_array[7]";
+                if ($filter_array[8] != "0") $wherestr=$wherestr." and e.Zu_ID=$filter_array[8]";
+                if ($filter_array[9] != "0") $wherestr=$wherestr." and e.Standort_ID=$filter_array[9]";
+            } else {
+                switch ($filter) {
+                    /*tickets - vorgemerkt zum Webauftritt/Löschen*/
+                    case 'ticket_highlight':
+                    $wherestr=" and IFNULL(t.mark_web,0)=1";
+                    break;
+                    case 'ticket_delete':
+                    $wherestr=" and IFNULL(t.mark_delete,0)=1";
+                    break;
+                }
             }
-        } 
+        }
+        
+        $orderstr=" ORDER BY ";
+        if ($sort !== "") {
+            $sort_array = explode(" ",$sort);
+
+            switch ($sort_array[0]) {
+                // Spalte nach der sortiert wird
+                case "1":
+                    $orderstr=$orderstr."`Exp-Nr`";
+                    break;
+                case "2":
+                    $orderstr=$orderstr."`Titel`";
+                    break;
+                case "3":
+                    $orderstr=$orderstr."Beschreibung";
+                    break;
+                case "4":
+                    $orderstr=$orderstr."`Hersteller`";
+                    break;
+                case "5":
+                    $orderstr=$orderstr."`Baujahr`";
+                    break;
+                case "6":
+                    $orderstr=$orderstr."`Wert`";
+                    break;
+                case "7":
+                    $orderstr=$orderstr."`Material`";
+                    break;
+                case "8":
+                    $orderstr=$orderstr."Kategorie";
+                    break;
+                case "9":
+                    $orderstr=$orderstr."Zustand";
+                    break;
+                case "10":
+                    $orderstr=$orderstr."Standort";
+                    break;
+            }
+            // Richtung der Sortierung festlegen
+            if ($sort_array[1] == "asc") {
+                $orderstr=$orderstr." asc";
+            } else {
+                $orderstr=$orderstr." desc";
+            }
+        } else {
+            $orderstr=$orderstr."`Exp-Nr` asc";
+        }
 
         $pdo = connect();
         $stmt = $pdo->prepare("SELECT `Objekt_ID`, `Exp-Nr`, `Titel`, e.Beschreibung Beschreibung, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
-            `Material`, `Ausstellung`, `Interesse`, IFNULL(k.Bezeichnung,'') Kategorie, IFNULL(z.Bezeichnung,'') Zustand, IFNULL(s.Name,'') Standort FROM `Exponat` e
+            `Material`, `Ausstellung`, `Interesse`, IFNULL(k.Bezeichnung,'') Kategorie, IFNULL(z.Bezeichnung,'') Zustand, IFNULL(s.Name,'') Standort, 
+            IFNULL(t.Nutzer_ID,0) Merker_ID, IFNULL(t.mark_web,0) mark_web
+            FROM `Exponat` e
             LEFT JOIN Kategorie k ON k.Kat_ID = e.Kat_ID 
             LEFT JOIN Zustand z ON z.Zu_ID = e.Zu_ID
-            LEFT JOIN Standort s ON s.Standort_ID = e.Standort_ID 
-            WHERE e.Zu_ID > 0 $wherestr");
+            LEFT JOIN Standort s ON s.Standort_ID = e.Standort_ID
+            LEFT JOIN Ticket t ON t.Exponat_ID = e.Objekt_ID 
+            WHERE e.Zu_ID > 0 $wherestr $orderstr");
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -113,7 +183,9 @@ function arrayToString(array $array): string {
         /* diese Funktion nimmt eine Exponat ID entgegen und fragt das entsprechende Exponat in der DB ab*/
         $pdo = connect();
         $stmt = $pdo->prepare('SELECT `Exp-Nr`, `Titel`, `Beschreibung`, `Hersteller`, `Baujahr`, `Wert`, `OrigPreis`, `Herkunft`, `Abmessungen`,
-            `Material`, `Ausstellung`, `Interesse`, `Kat_ID`, `Zu_ID`, `Standort_ID` FROM `Exponat` WHERE Objekt_ID=' . $exponat_id);
+            `Material`, `Ausstellung`, `Interesse`, `Kat_ID`, `Zu_ID`, `Standort_ID`, IFNULL(t.mark_web,0) mark_web, IFNULL(t.mark_delete,0) mark_delete FROM `Exponat` e
+            LEFT JOIN Ticket t on t.Exponat_ID=e.Objekt_ID
+            WHERE e.Objekt_ID=' . $exponat_id);
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -255,12 +327,94 @@ function arrayToString(array $array): string {
 
     }
 
+    function show_exponat_web($exponat_id) {
+        //Ticket für Webauftritt
+        $anmelde_id=$_SESSION['anmelde_id'];
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT Ticket_ID, mark_web FROM Ticket WHERE Exponat_ID=$exponat_id");
+        $stmt->execute();
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $exp = get_exponat($exponat_id)[0];
+        
+        
+        if (empty($values[0])) {
+            $stmt = $pdo->prepare("INSERT INTO Ticket (Exponat_ID, Nutzer_ID, Datum, mark_web, mark_delete) VALUES ($exponat_id, $anmelde_id, CURRENT_TIMESTAMP(),1,0)");
+            $stmt->execute();
+            $_SESSION['status_msg'] = 'show_exp_web';
+
+            write_log($exp, "mark_web_prepare", 0, $exponat_id);
+        } else {
+            if ($values[0]['mark_web'] == 0) {
+                $stmt = $pdo->prepare("UPDATE Ticket SET Nutzer_ID=$anmelde_id, Datum=CURRENT_TIMESTAMP(),mark_web=1,mark_delete=0 WHERE Exponat_ID=$exponat_id");
+                $stmt->execute();
+                $_SESSION['status_msg'] = 'show_exp_web';
+
+                write_log($exp, "mark_web_prepare", 0, $exponat_id);
+            } else {
+                $stmt = $pdo->prepare("UPDATE Ticket SET Nutzer_ID=$anmelde_id, Datum=CURRENT_TIMESTAMP(),mark_web=0,mark_delete=0 WHERE Exponat_ID=$exponat_id");
+                $stmt->execute();
+                $_SESSION['status_msg'] = 'notshow_exp_web';
+                
+                write_log($exp, "mark_web_hide", 0, $exponat_id);
+            }
+        }
+    }
+
+    function del_exp_prepare($exponat_id) {
+         //Ticket für Exponat löschen
+         $anmelde_id=$_SESSION['anmelde_id'];
+         $pdo = connect();
+         $stmt = $pdo->prepare("SELECT Ticket_ID, mark_delete FROM Ticket WHERE Exponat_ID=$exponat_id");
+         $stmt->execute();
+         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+ 
+         $exp = get_exponat($exponat_id)[0];
+
+         if (empty($values[0])) {
+            $stmt = $pdo->prepare("INSERT INTO Ticket (Exponat_ID, Nutzer_ID, Datum, mark_web, mark_delete) VALUES ($exponat_id, $anmelde_id, CURRENT_TIMESTAMP(),0,1)");
+            $stmt->execute();
+            $_SESSION['status_msg'] = 'del_exp_prepare';
+
+            write_log($exp, "mark_del_prepare", 0, $exponat_id);
+        } else {
+            $stmt = $pdo->prepare("UPDATE Ticket SET Nutzer_ID=$anmelde_id, Datum=CURRENT_TIMESTAMP(),mark_web=0,mark_delete=1 WHERE Exponat_ID=$exponat_id");
+            $stmt->execute();
+            $_SESSION['status_msg'] = 'del_exp_prepare';
+
+            write_log($exp, "mark_del_prepare", 0, $exponat_id);
+            
+        }
+    }
+
+    function exp_jahre() {
+        //alle Jahre der Exponate ausgeben - für Filter
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT DISTINCT Baujahr FROM Exponat WHERE ZU_ID > 0");
+        $stmt->execute();
+
+        $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $values;
+    }
+
     if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['get_exponat']))){
         get_exponat($_POST['exponat_id']);
     }
 
     if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['get_exponate']))){
-        get_exponate();
+        get_exponate('');
+    }
+    
+    if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['show_exp_in_web']))){
+        show_exponat_web([$_POST['exp_id']][0]);
+
+        header("Location: ../index.php");
+    }
+    
+    if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['del_exp']))){
+        del_exp_prepare([$_POST['exp_id']][0]);
+
+        header("Location: ../index.php");
     }
 
     if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['add_exponat']))){
@@ -734,9 +888,9 @@ function arrayToString(array $array): string {
         }
         return $db_has_username;
     }
-    function get_username($username){
+    function get_username($user_id){
         $pdo = connect();
-        $stmt = $pdo->prepare('SELECT `ANMELDUNG`  FROM `Nutzer`');
+        $stmt = $pdo->prepare('SELECT `ANMELDUNG`  FROM `Nutzer` WHERE Nutzer_ID='.$user_id);
         $stmt->execute();
         $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $username = $values[0]['ANMELDUNG'];
@@ -760,6 +914,146 @@ function arrayToString(array $array): string {
 
         return $values;
     }
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////// */
+/* //////////////////////////////////////// Tickets ////////////////////////////////////////////////////// */
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+    function tickets_webauftritt_ablehnen($array_deny) {
+        //Exponate ablehnen
+        $exp_str="";
+        foreach($array_deny as $item) {
+            $exp_str = $exp_str . $item . ",";
+        }
+        $exp_str = rtrim($exp_str,',');
+        $pdo = connect();
+        $stmt = $pdo->prepare("UPDATE Ticket SET mark_web=0 WHERE Exponat_ID IN ($exp_str)");
+        $stmt->execute();
+
+        foreach($array_deny as $item) {
+            $exp = get_exponat($item)[0];
+            write_log($exp, "mark_web_deny", 0, $item);  
+        }
+    }
+
+    function tickets_webauftritt_freigeben($array_confirm) {
+        //Exponate für Webauftritt freigebn
+        $exp_str="";
+        foreach($array_confirm as $item) {
+            $exp_str = $exp_str . $item . ",";
+        }
+        $exp_str = rtrim($exp_str,',');
+        $pdo = connect();
+        $stmt = $pdo->prepare("UPDATE Ticket SET mark_web=2 WHERE Exponat_ID IN ($exp_str)");
+        $stmt->execute();
+        
+        foreach($array_confirm as $item) {
+            $exp = get_exponat($item)[0];
+            write_log($exp, "mark_web_confirm", 0, $item);  
+        }
+    }
+
+    function tickets_delete_ablehnen($array_deny) {
+        //Exponate Löschung ablehnen
+        $exp_str="";
+        foreach($array_deny as $item) {
+            $exp_str = $exp_str . $item . ",";
+        }
+        $exp_str = rtrim($exp_str,',');
+        $pdo = connect();
+        $stmt = $pdo->prepare("UPDATE Ticket SET mark_delete=0 WHERE Exponat_ID IN ($exp_str)");
+        $stmt->execute();
+
+        foreach($array_deny as $item) {
+            $exp = get_exponat($item)[0];
+            write_log($exp, "mark_del_deny", 0, $item);  
+        }
+    }
+
+    function tickets_delete_freigeben($array_confirm) {
+        //Exponate Löschung freigeben
+        $exp_str="";
+        foreach($array_confirm as $item) {
+            $exp_str = $exp_str . $item . ",";
+        }
+
+        foreach($array_confirm as $item) {
+            $exp = get_exponat($item)[0];
+            write_log($exp, "mark_del_confirm", 0, $item);  
+        }
+
+        $exp_str = rtrim($exp_str,',');
+        $pdo = connect();
+        $stmt = $pdo->prepare("DELETE FROM Exponat WHERE Objekt_ID IN ($exp_str)");
+        $stmt->execute();
+
+    }
+
+    if(($_SERVER['REQUEST_METHOD']==='POST') && ($_POST['routing']== 'tickets_webauftritt')) {
+        //Tickets Webauftritt
+        if (empty($_POST['web_ablehnen']) && empty($_POST['web_freigeben'])) {
+            $_SESSION['status_msg']='tickets_empty';
+        } else {
+            $exp_in_both_arrays=false;
+            if (!empty($_POST['web_ablehnen']) && !empty($_POST['web_freigeben'])) {
+                foreach($_POST['web_ablehnen'] as $item) {
+                    if (in_array($item,$_POST['web_freigeben'])) {
+                        $exp_in_both_arrays=true;
+                    }
+                }
+            }
+        }
+        if ($exp_in_both_arrays) {
+            $_SESSION['status_msg']='tickets_web_both';
+        } else {
+            if (!empty($_POST['web_ablehnen'])) {
+                tickets_webauftritt_ablehnen($_POST['web_ablehnen']);
+                $_SESSION['status_msg']='tickets_web_denied';
+            }
+            if (!empty($_POST['web_freigeben'])) {
+                tickets_webauftritt_freigeben($_POST['web_freigeben']);
+                $_SESSION['status_msg']='tickets_web_confirmed';
+            }
+        }
+        $_SESSION['routing']= 'tickets';
+        header("Location: ../index.php");
+    }
+
+    if(($_SERVER['REQUEST_METHOD']==='POST') && ($_POST['routing']== 'tickets_loeschen')) {
+        //Tickets Exponate löschen
+        
+        if (empty($_POST['del_ablehnen']) && empty($_POST['del_freigeben'])) {
+            $_SESSION['status_msg']='tickets_empty';
+        } else {
+            $exp_in_both_arrays=false;
+            if (!empty($_POST['del_ablehnen']) && !empty($_POST['del_freigeben'])) {
+                foreach($_POST['del_ablehnen'] as $item) {
+                    if (in_array($item,$_POST['del_freigeben'])) {
+                        $exp_in_both_arrays=true;
+                    }
+                }
+            }
+        }
+        if ($exp_in_both_arrays) {
+            $_SESSION['status_msg']='tickets_both';
+        } else {
+            if (!empty($_POST['del_ablehnen'])) {
+                tickets_delete_ablehnen($_POST['del_ablehnen']);
+                $_SESSION['status_msg']='tickets_del_denied';
+            }
+            if (!empty($_POST['del_freigeben'])) {
+                tickets_delete_freigeben($_POST['del_freigeben']);
+                $_SESSION['status_msg']='tickets_del_confirmed';
+            }
+        }
+        $_SESSION['routing']= 'tickets';
+        header("Location: ../index.php");
+        
+    }
+
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////// */
+/* //////////////////////////////////////// Routing ////////////////////////////////////////////////////// */
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
 
     if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['routing'])) && ($_SESSION['anmelde_id'] !== NULL)){
         $_SESSION['routing'] = $_POST['routing'];
@@ -771,6 +1065,28 @@ function arrayToString(array $array): string {
                 $_SESSION['exp_id'] = null;
                 header("Location: ../index.php");
             }
+
+            if (!empty($_POST['filter'])) {
+                //Filter zusammenbauen und in Session lagern
+                if ($_POST['filter'] == "1") {
+                    $filterstr="";
+                    foreach ($_POST as $item => $value) {
+                        //alle POST-Array-Elemente mit exp_ in Filter-Str schmeißen
+                        if (str_contains($item,"exp_")) {
+                            $filterstr=$filterstr.$value."|";
+                        }
+                    }
+                    $_SESSION['exp_filter'] = rtrim($filterstr,"|");
+                } else {
+                    $_SESSION['exp_filter'] = "";
+                }
+            }
+
+            if (!empty($_POST['sort']) && !empty($_POST['orderby'])) {
+                //Sortierung zusammenbauen und in Session lagern
+                $_SESSION['exp_sort']= $_POST['sort']." ".$_POST['orderby'];
+            }
+
             header("Location: ../index.php");
         }
         if ($_POST['routing'] == 'show_users' || $_POST['routing'] == 'add_user') {
@@ -834,6 +1150,12 @@ function arrayToString(array $array): string {
             if (!empty($_POST['standort_id'])) $_SESSION['standort_id'] = $_POST['standort_id'];
             header("Location: ../index.php");
         }
+    }
+
+    if(($_SERVER['REQUEST_METHOD']==='POST') && (!empty($_POST['pdf_erzeugen'])) && !empty($_POST['exp_id'])){
+        //ID in Session, Seite zur PDF-Erzeugung aufrufen 
+        if (!empty($_POST['exp_id'])) $_SESSION['exp_id'] = $_POST['exp_id'];
+        header("Location: ../pdf.php");
     }
 /*Anmeldung  */
 
@@ -911,7 +1233,7 @@ function write_log($made_changes, $log_add_edit, $log_type, $log_obj_id){
 }
 function show_log(){
     $pdo = connect();
-    $stmt = $pdo->prepare('SELECT * FROM `Log`');
+    $stmt = $pdo->prepare('SELECT * FROM `Log` ORDER BY Log_ID desc');
     $stmt->execute();
     $values = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $values;

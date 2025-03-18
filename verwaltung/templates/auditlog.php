@@ -68,6 +68,27 @@
 															}else if($id['Log_add_edit'] == "edit"){
 																$add_edit = "hat editiert";
 
+															}else if($id['Log_add_edit'] == "mark_web_prepare"){
+																$add_edit = "hat Exponat für Webauftritt vorgemerkt";
+
+															}else if($id['Log_add_edit'] == "mark_web_hide"){
+																$add_edit = "hat Exponat aus dem Webauftritt entfernt";
+
+															}else if($id['Log_add_edit'] == "mark_web_deny"){
+																$add_edit = "hat Ticket (Webauftritt) abgelehnt";
+
+															}else if($id['Log_add_edit'] == "mark_web_confirm"){
+																$add_edit = "hat Ticket (Webauftritt) bestätigt";
+
+															}else if($id['Log_add_edit'] == "mark_del_prepare"){
+																$add_edit = "hat Exponat zur Löschung vorgemerkt";
+
+															}else if($id['Log_add_edit'] == "mark_del_deny"){
+																$add_edit = "hat Ticket (Löschung) abgelehnt";
+
+															}else if($id['Log_add_edit'] == "mark_del_confirm"){
+																$add_edit = "hat Ticket (Löschung) bestätigt";
+
 															}
 															if($id['Log_Typ'] == 0){
 																$log_typ = "Exponat";
